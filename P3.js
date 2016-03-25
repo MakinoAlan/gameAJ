@@ -2,9 +2,11 @@
  * UBC CPSC 314, January 2016
  * Project 3 Template
  */
-
 var scene = new THREE.Scene();
-
+THREE.Object3D.prototype.setMatrix = function(a) {
+  this.matrix=a;
+  this.matrix.decompose(this.position,this.quaternion,this.scale);
+}
 // SETUP RENDERER
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -113,22 +115,143 @@ function loadOBJ(file, material, scale, xOff, yOff, zOff, xRot, yRot, zRot) {
 function addRob1(){}
 
 // Jack
+
+var components = [];  // body, head, lhand, rhand, lleg, rleg
+
 function addRob2(){
-  var basePos = new THREE.Vector3(100,10,10); 
-  var geometry = new THREE.CylinderGeometry( 3, 3, 3, 32 );
-  var material = new THREE.MeshBasicMaterial( {color: 'green'} );
-  var cylinder = new THREE.Mesh( geometry, material );
-  scene.add( cylinder );
-  cylinder.position = basePos;
+  var material = new THREE.MeshBasicMaterial( {color: 'green'} );  
+  var basePos= new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
+  
+  var body_pos = new THREE.Matrix4().set(1,0,0,10, 0,1,0,4.5, 0,0,1,0, 0,0,0,1);
+  var body_pos_abs = new THREE.Matrix4().multiplyMatrices(basePos,body_pos); 
+  var body_geo = new THREE.CylinderGeometry( 2, 2, 4, 32 );
+  var body = new THREE.Mesh(body_geo,material);
+  body.setMatrix(body_pos_abs);
+  scene.add(body);
+  components.push(body);
+
+  var head_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,3.5, 0,0,1,0, 0,0,0,1);
+  var head_pos_abs = new THREE.Matrix4().multiplyMatrices(body_pos_abs,head_pos); 
+  var head_geo = new THREE.DodecahedronGeometry(1, 0);
+  var head = new THREE.Mesh(head_geo,material);
+  head.setMatrix(head_pos_abs);
+  scene.add(head);
+  components.push(head);
+
+
+  var l_hand_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,-3, 0,0,0,1);
+  var l_hand_pos_abs = new THREE.Matrix4().multiplyMatrices(body_pos_abs,l_hand_pos); 
+  var l_hand_geo = new THREE.BoxGeometry(1, 3, 1);
+  var l_hand = new THREE.Mesh(l_hand_geo,material);
+  l_hand.setMatrix(l_hand_pos_abs);
+  scene.add(l_hand);
+  components.push(l_hand);
+
+  var r_hand_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,3, 0,0,0,1);
+  var r_hand_pos_abs = new THREE.Matrix4().multiplyMatrices(body_pos_abs,r_hand_pos); 
+  var r_hand_geo = new THREE.BoxGeometry(1, 3, 1);
+  var r_hand = new THREE.Mesh(r_hand_geo,material);
+  r_hand.setMatrix(r_hand_pos_abs);
+  scene.add(r_hand);
+  components.push(r_hand);
+
+  var l_leg_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,-3, 0,0,1,-1, 0,0,0,1);
+  var l_leg_pos_abs = new THREE.Matrix4().multiplyMatrices(body_pos_abs,l_leg_pos); 
+  var l_leg_geo = new THREE.BoxGeometry(1, 3, 1);
+  var l_leg = new THREE.Mesh(l_leg_geo,material);
+  l_leg.setMatrix(l_leg_pos_abs);
+  scene.add(l_leg);
+  components.push(l_leg);
+
+  var r_leg_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,-3, 0,0,1,1, 0,0,0,1);
+  var r_leg_pos_abs = new THREE.Matrix4().multiplyMatrices(body_pos_abs,r_leg_pos); 
+  var r_leg_geo = new THREE.BoxGeometry(1, 3, 1);
+  var r_leg = new THREE.Mesh(r_leg_geo,material);
+  r_leg.setMatrix(r_leg_pos_abs);
+  scene.add(r_leg);
+  components.push(r_leg);
 
 }
 
-addRob2();
-// SETUP UPDATE CALL-BACK
-var keyboard = new THREEx.KeyboardState();
-var render = function() {
- // tip: change armadillo shading here according to keyboard
 
+addRob2();
+
+var clock = new THREE.Clock(true);
+var p0; // start position or angle
+var p1; // end position or angle
+var time_length; // total time of animation
+var time_start; // start time of animation
+var time_end; // end time of animation
+var p; // current frame
+var animate = false; // animate?
+// function init_animation()
+// Initializes parameters and sets animate flag to true.
+// Input: start position or angle, end position or angle, and total time of animation.
+function init_animation(p_start,p_end,t_length){
+  p0 = p_start;
+  p1 = p_end;
+  time_length = t_length;
+  time_start = clock.getElapsedTime();
+  time_end = time_start + time_length;
+  animate = true; // flag for animation
+  return;
+}
+
+function updateBody() {
+  switch(true)
+  {
+      case(key == "U" && animate):
+      var time = clock.getElapsedTime(); // t seconds passed since the clock started.
+
+      if (time > time_end){
+        p = p1;
+        animate = false;
+        break;
+      }
+
+      p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
+
+      var rotateZ = new THREE.Matrix4().set(1,        0,         0,        0, 
+                                            0, Math.cos(-p),-Math.sin(-p), 0, 
+                                            0, Math.sin(-p), Math.cos(-p), 0,
+                                            0,        0,         0,        1);
+
+      var torsoRotMatrix = new THREE.Matrix4().multiplyMatrices(components[0].matrix,rotateZ);
+      components [0].setMatrix(torsoRotMatrix); 
+      break
+
+      // TO-DO: IMPLEMENT JUMPCUT/ANIMATION FOR EACH KEY!
+      // Note: Remember spacebar sets jumpcut/animate!
+      
+
+
+    default:
+      break;
+  }
+}
+//testMove();
+
+var keyboard = new THREEx.KeyboardState();
+var key;
+keyboard.domElement.addEventListener('keydown',function(event){
+  if (event.repeat)
+    return;  
+  else if(keyboard.eventMatches(event,"0")){    // 0: Set camera to neutral position, view reset
+    alert("0");
+  }
+  else if(keyboard.eventMatches(event,"U")){ 
+    (key == "U")? init_animation(p1,p0,time_length) : (init_animation(0,Math.PI/4,1), key = "U")}  
+
+
+  // TO-DO: BIND KEYS TO YOUR JUMP CUTS AND ANIMATIONS
+  // Note: Remember spacebar sets jumpcut/animate! 
+  // Hint: Look up "threex.keyboardstate by Jerome Tienne" for more info.
+
+
+
+    });
+var render = function() {
+ updateBody();
  requestAnimationFrame(render);
  renderer.render(scene, camera);
 }
