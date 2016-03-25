@@ -41,7 +41,8 @@ var defaultMaterial = new THREE.MeshLambertMaterial();
 //var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
 
 var floorGeometry = new THREE.PlaneBufferGeometry(30, 30);
-var floor = new THREE.Mesh(floorGeometry, defaultMaterial);
+var floorMaterial = new THREE.MeshBasicMaterial( {side: THREE.DoubleSide, color: 'red'} );
+var floor = new THREE.Mesh(floorGeometry, floorMaterial);
 floor.position.y = -0.1;
 floor.rotation.x = Math.PI / 2;
 scene.add(floor);
@@ -113,7 +114,12 @@ function addRob1(){}
 
 // Jack
 function addRob2(){
-
+  var basePos = new THREE.Vector3(100,10,10); 
+  var geometry = new THREE.CylinderGeometry( 3, 3, 3, 32 );
+  var material = new THREE.MeshBasicMaterial( {color: 'green'} );
+  var cylinder = new THREE.Mesh( geometry, material );
+  scene.add( cylinder );
+  cylinder.position = basePos;
 
 }
 
