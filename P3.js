@@ -109,8 +109,132 @@ function loadOBJ(file, material, scale, xOff, yOff, zOff, xRot, yRot, zRot) {
 
 // CREATE SPHERES
 
+function makeCube() {
+  var unitCube = new THREE.BoxGeometry(1,1,1);
+  return unitCube;
+}
+
+THREE.Object3D.prototype.setMatrix = function(a) {
+  this.matrix=a;
+  this.matrix.decompose(this.position,this.quaternion,this.scale);
+}
+
 // Alan
-function addRob1(){}
+function addRob1(){
+  // set the general material
+  var normalMaterial = new THREE.MeshNormalMaterial();
+  
+  // set the torso of the character
+  var torsoGeometry = makeCube();
+  var torso_scale = new THREE.Matrix4().set(3,0,0,0, 0,7,0,0, 0,0,3,0, 0,0,0,1);
+  torsoGeometry.applyMatrix(torso_scale);
+  var torso = new THREE.Mesh(torsoGeometry,normalMaterial);
+  var torsoMatrix = new THREE.Matrix4().set(1,0,0,-10, 0,1,0,7, 0,0,1,0, 0,0,0,1);
+  torso.setMatrix(torsoMatrix);
+  scene.add(torso);
+
+  // set arms and leg for the character
+  var arm_left_scale = new THREE.Matrix4().set(5,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
+  var arm_leftGeometry = makeCube();
+  arm_leftGeometry.applyMatrix(arm_left_scale);
+  var arm_left = new THREE.Mesh(arm_leftGeometry,normalMaterial);
+  var arm_left_pos = new THREE.Matrix4().set(1,0,0,3, 0,1,0,2, 0,0,1,0, 0,0,0,1);
+  var arm_left_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,arm_left_pos);
+  arm_left.setMatrix(arm_left_pos_abs);
+  scene.add(arm_left);
+
+  var arm_right_scale = new THREE.Matrix4().set(5,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
+  var arm_rightGeometry = makeCube();
+  arm_rightGeometry.applyMatrix(arm_right_scale);
+  var arm_right = new THREE.Mesh(arm_rightGeometry,normalMaterial);
+  var arm_right_pos = new THREE.Matrix4().set(1,0,0,-3, 0,1,0,2, 0,0,1,0, 0,0,0,1);
+  var arm_right_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,arm_right_pos);
+  arm_right.setMatrix(arm_right_pos_abs);
+  scene.add(arm_right);
+
+  var leg_left_scale = new THREE.Matrix4().set(1,0,0,0, 0,4,0,0, 0,0,1,0, 0,0,0,1);
+  var leg_left_Geometry = makeCube();
+  leg_left_Geometry.applyMatrix(leg_left_scale);
+  var leg_left = new THREE.Mesh(leg_left_Geometry,normalMaterial);
+  var leg_left_pos = new THREE.Matrix4().set(1,0,0,1, 0,1,0,-5, 0,0,1,0, 0,0,0,1);
+  var leg_left_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,leg_left_pos);
+  leg_left.setMatrix(leg_left_pos_abs);
+  scene.add(leg_left);
+
+  var leg_left_scale = new THREE.Matrix4().set(1,0,0,0, 0,4,0,0, 0,0,1,0, 0,0,0,1);
+  var leg_left_Geometry = makeCube();
+  leg_left_Geometry.applyMatrix(leg_left_scale);
+  var leg_left = new THREE.Mesh(leg_left_Geometry,normalMaterial);
+  var leg_left_pos = new THREE.Matrix4().set(1,0,0,-1, 0,1,0,-5, 0,0,1,0, 0,0,0,1);
+  var leg_left_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,leg_left_pos);
+  leg_left.setMatrix(leg_left_pos_abs);
+  scene.add(leg_left);
+
+  var leg_right_scale = new THREE.Matrix4().set(1,0,0,0, 0,4,0,0, 0,0,1,0, 0,0,0,1);
+  var leg_right_Geometry = makeCube();
+  leg_right_Geometry.applyMatrix(leg_right_scale);
+  var leg_right = new THREE.Mesh(leg_right_Geometry,normalMaterial);
+  var leg_right_pos = new THREE.Matrix4().set(1,0,0,1, 0,1,0,-5, 0,0,1,0, 0,0,0,1);
+  var leg_right_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,leg_right_pos);
+  leg_right.setMatrix(leg_right_pos_abs);
+  scene.add(leg_right);
+
+  // set neck and head for the character
+  var neck_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
+  var neck_Geometry = new THREE.CylinderGeometry(0.6,0.6,0.6,50);
+  neck_Geometry.applyMatrix(neck_scale);
+  var neck = new THREE.Mesh(neck_Geometry,normalMaterial);
+  var neck_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,3.8, 0,0,1,0, 0,0,0,1);
+  var neck_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,neck_pos);
+  neck.setMatrix(neck_pos_abs);
+  scene.add(neck);
+
+  var head_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
+  var head_Geometry = new THREE.SphereGeometry(1.5, 35, 35);
+  head_Geometry.applyMatrix(head_scale);
+  var head = new THREE.Mesh(head_Geometry,normalMaterial);
+  var head_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,1.6, 0,0,1,0, 0,0,0,1);
+  var head_pos_abs = new THREE.Matrix4().multiplyMatrices(neck_pos_abs,head_pos);
+  head.setMatrix(head_pos_abs);
+  scene.add(head);
+
+  // draw the sword and sheild
+  var hilt_scale = new THREE.Matrix4().set(0.7,0,0,0, 0,1.3,0,0, 0,0,0.5,0, 0,0,0,1);
+  var hilt_Geometry = new makeCube();
+  hilt_Geometry.applyMatrix(hilt_scale);
+  var hilt = new THREE.Mesh(hilt_Geometry,normalMaterial);
+  var hilt_pos = new THREE.Matrix4().set(1,0,0,8, 0,1,0,1, 0,0,1,0, 0,0,0,1);
+  var hilt_pos_abs = new THREE.Matrix4().multiplyMatrices(arm_right_pos_abs,hilt_pos);
+  hilt.setMatrix(hilt_pos_abs);
+  scene.add(hilt);
+
+  var hilt1_scale = new THREE.Matrix4().set(1.5,0,0,0, 0,0.7,0,0, 0,0,0.6,0, 0,0,0,1);
+  var hilt1_Geometry = new THREE.CylinderGeometry(1,1,0.2,50);
+  hilt1_Geometry.applyMatrix(hilt1_scale);
+  var hilt1 = new THREE.Mesh(hilt1_Geometry,normalMaterial);
+  var hilt1_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0.6, 0,0,1,0, 0,0,0,1);
+  var hilt1_pos_abs = new THREE.Matrix4().multiplyMatrices(hilt_pos_abs,hilt1_pos);
+  hilt1.setMatrix(hilt1_pos_abs);
+  scene.add(hilt1);
+
+  var blade_scale = new THREE.Matrix4().set(0.8,0,0,0, 0,1.5,0,0, 0,0,0.2,0, 0,0,0,1);
+  var blade_Geometry = new THREE.CylinderGeometry(1,1,5,50);
+  blade_Geometry.applyMatrix(blade_scale);
+  var blade = new THREE.Mesh(blade_Geometry,normalMaterial);
+  var blade_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,4, 0,0,1,0, 0,0,0,1);
+  var blade_pos_abs = new THREE.Matrix4().multiplyMatrices(hilt1_pos_abs,blade_pos);
+  blade.setMatrix(blade_pos_abs);
+  scene.add(blade);
+
+  var sheild_scale = new THREE.Matrix4().set(0.3,0,0,0, 0,6,0,0, 0,0,5,0, 0,0,0,1);
+  var sheild_Geometry = makeCube();
+  sheild_Geometry.applyMatrix(sheild_scale);
+  var sheild = new THREE.Mesh(sheild_Geometry,normalMaterial);
+  var sheild_pos = new THREE.Matrix4().set(1,0,0,-8.5, 0,1,0,0, 0,0,1,0, 0,0,0,1);
+  var sheild_pos_abs = new THREE.Matrix4().multiplyMatrices(arm_left_pos_abs,sheild_pos);
+  sheild.setMatrix(sheild_pos_abs);
+  scene.add(sheild);
+}
 
 // Jack
 function addRob2(){
@@ -123,7 +247,8 @@ function addRob2(){
 
 }
 
-addRob2();
+addRob1();
+//addRob2();
 // SETUP UPDATE CALL-BACK
 var keyboard = new THREEx.KeyboardState();
 var render = function() {
