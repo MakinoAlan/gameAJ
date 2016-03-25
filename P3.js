@@ -103,30 +103,15 @@ function loadOBJ(file, material, scale, xOff, yOff, zOff, xRot, yRot, zRot) {
   }, onProgress, onError);
 }
 
-loadOBJ('obj/armadillo.obj', armadilloMaterial, 3, 0,3,-2, 0,Math.PI,0);
+// loadOBJ('obj/armadillo.obj', armadilloMaterial, 3, 0,3,-2, 0,Math.PI,0);
 
 // CREATE SPHERES
-var sphere = new THREE.SphereGeometry(1, 32, 32);
-var gem_gouraud = new THREE.Mesh(sphere, defaultMaterial); // tip: make different materials for each sphere
-gem_gouraud.position.set(-3, 1, -1);
-scene.add(gem_gouraud);
-gem_gouraud.parent = floor;
 
-var gem_phong = new THREE.Mesh(sphere, defaultMaterial);
-gem_phong.position.set(-1, 1, -1);
-scene.add(gem_phong);
-gem_phong.parent = floor;
+// Alan
+function addRob1(){}
 
-var gem_phong_blinn = new THREE.Mesh(sphere, defaultMaterial);
-gem_phong_blinn.position.set(1, 1, -1);
-scene.add(gem_phong_blinn);
-gem_phong_blinn.parent = floor;
-
-var gem_toon = new THREE.Mesh(sphere, defaultMaterial);
-gem_toon.position.set(3, 1, -1);
-scene.add(gem_toon);
-gem_toon.parent = floor;
-
+// Jack
+function addRob2(){}
 // SETUP UPDATE CALL-BACK
 var keyboard = new THREEx.KeyboardState();
 var render = function() {
