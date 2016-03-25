@@ -32,14 +32,16 @@ function resize() {
 window.addEventListener('resize', resize);
 resize();
 
+var defaultMaterial = new THREE.MeshLambertMaterial();
 // FLOOR WITH CHECKERBOARD 
-var floorTexture = new THREE.ImageUtils.loadTexture('images/checkerboard.jpg');
-floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
-floorTexture.repeat.set(4, 4);
+//var floorTexture = new THREE.ImageUtils.loadTexture('images/checkerboard.jpg');
+//floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+//floorTexture.repeat.set(4, 4);
 
-var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
+//var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
+
 var floorGeometry = new THREE.PlaneBufferGeometry(30, 30);
-var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+var floor = new THREE.Mesh(floorGeometry, defaultMaterial);
 floor.position.y = -0.1;
 floor.rotation.x = Math.PI / 2;
 scene.add(floor);
@@ -50,7 +52,6 @@ var ambientColor = new THREE.Color(0.4,0.4,0.4);
 var lightPosition = new THREE.Vector3(70,100,70);
 
 // MATERIALS
-var defaultMaterial = new THREE.MeshLambertMaterial();
 var armadilloMaterial = new THREE.ShaderMaterial({
    uniforms: {
      lightColor : {type : 'c', value: lightColor},
@@ -111,7 +112,12 @@ function loadOBJ(file, material, scale, xOff, yOff, zOff, xRot, yRot, zRot) {
 function addRob1(){}
 
 // Jack
-function addRob2(){}
+function addRob2(){
+
+
+}
+
+addRob2();
 // SETUP UPDATE CALL-BACK
 var keyboard = new THREEx.KeyboardState();
 var render = function() {
