@@ -244,7 +244,27 @@ function addRob1(){
   sheild.setMatrix(sheild_pos_abs);
   scene.add(sheild);
   components_a.push(sheild)
+
+  //window.addEventListener( 'mousemove', onDocumentMouseDown, false );
 }
+
+//var mouseVector = new THREE.Vector3(2 * (event.ClientX/window.innerWidth ) - 1, 1 - 2 * (event.ClientY / window.innerHeight));
+/*
+var mouse = new THREE.Vector2(), INTERSECTED;
+function onDocumentMouseDown( event ) {
+        var torso = components[0];
+        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+        mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        var projector = new THREE.Projector();
+        var raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera( mouse, camera );
+        //var raycaster = projector.pickingRay( mouse.clone(), camera);
+        var intersects = raycaster.intersectObjects( torso );
+        if( intersects.length > 0) {
+          intersects[0].object.material.color.setRGB(Math.random(),Math.random(),Math.random());
+        }
+      }
+      */
 
 // Jack
 
@@ -304,8 +324,26 @@ function addRob2(){
   scene.add(r_leg);
   components.push(r_leg);
 
+  window.addEventListener( 'mousedown', onDocumentMouseDown, false );
+
 }
 
+var mouse = new THREE.Vector2(), INTERSECTED;
+function onDocumentMouseDown( event ) {
+        var torso = components[0];
+        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+        mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        var projector = new THREE.Projector();
+        var raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera( mouse, camera );
+        //var raycaster = projector.pickingRay( mouse.clone(), camera);
+        var intersects = raycaster.intersectObjects( scene.children );
+        if( intersects.length > 0) {
+          intersects[0].object.material.color.setRGB(Math.random(),Math.random(),Math.random());
+        }
+      }
+
+/*
 var texts = [];
 var text_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,22, 0,0,1,-5, 0,0,0,1);
 
@@ -335,6 +373,7 @@ text4.setMatrix(text_pos);
 texts.push(text4);
 
 scene.add(texts[0]);
+*/
 
 addRob1();
 addRob2();
