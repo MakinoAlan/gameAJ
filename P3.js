@@ -338,6 +338,7 @@ function init_animation(p_start,p_end,t_length){
   return;
 }
 
+
 function rob1_defend() {
   var axis = new THREE.Vector3(0,1,0);
   var rotateY = new THREE.Matrix4().set(Math.cos(p),0, Math.sin(p),  0, 
@@ -347,11 +348,17 @@ function rob1_defend() {
   components_a[1].rotateOnAxis(axis,-Math.PI/120);
 }
 
-function rob2_defend() {
+var rob2_wall_geo = new THREE.BoxGeometry(1, 3, 5);
+var rob2_wall = new THREE.Mesh(rob2_wall_geo,material);
+rob2_wall.position.set(3,5,0);
+var is_wall = 0;
 
+function rob2_defend(){
+  if(is_wall == 0){scene.add(rob2_wall);is_wall=1;}
+  components[2].rotateZ(-Math.PI/120);
+  components[3].rotateZ(-Math.PI/120);
+  rob2_wall.scale.y+=0.02;
 }
-
-
 function updateBody() {
   switch(true)
   {
@@ -414,11 +421,10 @@ function updateBody() {
 
       case(key == 4 && animate):
       var time = clock.getElapsedTime(); // t seconds passed since the clock started.
-
       if (time > time_end){
         p = p1;
         animate = false;
-        resetBody();
+
         break;
       }
 
@@ -471,12 +477,18 @@ function removeText(){scene.remove(texts[key]);}
 function addText(){scene.add(texts[key]);}
 
 function resetBody(){
-  components[0].rotation.z=0;
+  for(var i=0;i<6;i++){
+    components[i].rotation.z=0;}
+  scene.remove(rob2_wall);
+  rob2_wall.scale.y = 1;
+  is_wall = 0;
+  components_a[1].rotation.y = 0;
 }
 
 function takeAction(){
   switch (true){
      case(act1==1 && act2==1):
+       resetBody();
        removeText();
        console.log("1: "+act1+" 2: "+act2);
        key=1;
@@ -498,6 +510,7 @@ function takeAction(){
        init_animation(0,Math.PI/4,1);
      break;
      case(act1==2 && act2==2):
+       resetBody();
        removeText();
        console.log("1: "+act1+" 2: "+act2);
        key=4;
