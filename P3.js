@@ -4,12 +4,13 @@
  */
 $(document).ready(function(){
 
+
 var scene = new THREE.Scene();
 
 
 // SETUP RENDERER
 var renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0xffffff);
 document.body.appendChild(renderer.domElement);
 
@@ -540,6 +541,30 @@ keyboard.domElement.addEventListener('keydown',function(event){
 
     });
 
+
+
+window.addEventListener( 'mousedown', onMouseDown, false);
+
+var raycaster = new THREE.Raycaster();
+
+function onMouseDown(event){
+        event.preventDefault();
+        var dir = new THREE.Vector3();
+        var vector = new THREE.Vector3();
+        vector.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5); 
+
+        vector.unproject(camera);
+
+        raycaster.set(camera.position, vector.sub(camera.position).normalize());
+
+        var intersects = raycaster.intersectObjects(components, false);
+
+        if (intersects.length > 0) {
+
+            intersects[0].object.material.color.setRGB(Math.random(),Math.random(),Math.random());
+
+      }
+}
 
 var render = function() {
  updateBody();
