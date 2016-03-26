@@ -18,7 +18,7 @@ document.body.appendChild(renderer.domElement);
 // SETUP CAMERA
 var aspect = window.innerWidth/window.innerHeight;
 var camera = new THREE.PerspectiveCamera(30, aspect, 0.1, 10000);
-camera.position.set(10,15,40);
+camera.position.set(20,35,100);
 camera.lookAt(scene.position); 
 scene.add(camera);
 
@@ -237,9 +237,10 @@ function addRob1(){
 // Jack
 
 var components = [];  // body, head, lhand, rhand, lleg, rleg
+var material = new THREE.MeshBasicMaterial( {color: 'green'} );
 
 function addRob2(){
-  var material = new THREE.MeshBasicMaterial( {color: 'green'} );  
+  
   var basePos= new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
   
   var body_pos = new THREE.Matrix4().set(1,0,0,10, 0,1,0,4.5, 0,0,1,0, 0,0,0,1);
@@ -293,6 +294,35 @@ function addRob2(){
 
 }
 
+var texts = [];
+var text_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,22, 0,0,1,-5, 0,0,0,1);
+
+var text0_geo = new THREE. TextGeometry("START",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+var text0 = new THREE.Mesh(text0_geo,material);
+text0.setMatrix(text_pos);
+texts.push(text0);
+
+var text1_geo = new THREE. TextGeometry("ATTACK - ATTACK",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+var text1 = new THREE.Mesh(text1_geo,material);
+text1.setMatrix(text_pos);
+texts.push(text1);
+
+var text2_geo = new THREE. TextGeometry("ATTACK - DEFEND",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+var text2 = new THREE.Mesh(text2_geo,material);
+text2.setMatrix(text_pos);
+texts.push(text2);
+
+var text3_geo = new THREE. TextGeometry("DEFEND - ATTACK",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+var text3 = new THREE.Mesh(text3_geo,material);
+text3.setMatrix(text_pos);
+texts.push(text3);
+
+var text4_geo = new THREE. TextGeometry("DEFEND - DEFEND",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+var text4 = new THREE.Mesh(text4_geo,material);
+text4.setMatrix(text_pos);
+texts.push(text4);
+
+scene.add(texts[0]);
 
 addRob1();
 addRob2();
@@ -347,7 +377,7 @@ function updateBody() {
       // TO-DO: IMPLEMENT JUMPCUT/ANIMATION FOR EACH KEY!
       // Note: Remember spacebar sets jumpcut/animate!
       
-      case(key == "W" && animate):
+      case(key == 0 && animate):
       var time = clock.getElapsedTime(); // t seconds passed since the clock started.
 
       if (time > time_end){
@@ -358,7 +388,7 @@ function updateBody() {
 
       p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
 
-      var rotateZ = new THREE.Matrix4().set(1,        0,         0,        -p , 
+      var rotateZ = new THREE.Matrix4().set(1,        0,         0,        -p/10 , 
                                             0, 1,0, 0, 
                                             0, 0, 1, 0,
                                             0,        0,         0,        1);
@@ -372,29 +402,96 @@ function updateBody() {
  
       break
 
+      case(key == 1 && animate):
+      var time = clock.getElapsedTime(); // t seconds passed since the clock started.
+
+      if (time > time_end){
+        p = p1;
+        animate = false;
+        break;
+      }
+
+      p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
+
+      var rotateZ = new THREE.Matrix4().set(1,        0,         0,        0, 
+                                            0, Math.cos(-p),-Math.sin(-p), 0, 
+                                            0, Math.sin(-p), Math.cos(-p), 0,
+                                            0,        0,         0,        1);
+
+      var torsoRotMatrix = new THREE.Matrix4().multiplyMatrices(components[0].matrix,rotateZ);
+      components [0].setMatrix(torsoRotMatrix); 
+      var torsoRotMatrix1 = new THREE.Matrix4().multiplyMatrices(components[1].matrix,rotateZ);
+      components [1].setMatrix(torsoRotMatrix1); 
+      break
+
     default:
       break;
   }
 }
 //testMove();
 
-function actions(i){
-  $('#score').html(i);
+var hp1 = 100;
+var hp2 = 100;
+var mp1 = 0;
+var mp2 = 0;
+var act1 = 0;
+var act2 = 0;
+var turn = 0;
+var key = 0; // 1:11,2:12,3:21,4:22
 
+function removeText(){scene.remove(texts[key]);}
+function addText(){scene.add(texts[key]);}
+
+function takeAction(){
+  switch (true){
+     case(act1==1 && act2==1):
+       removeText();
+       console.log("1: "+act1+" 2: "+act2);
+       key=1;
+       addText();
+       init_animation(0,Math.PI/4,1);
+     break;
+     case(act1==1 && act2==2):
+       removeText();
+       console.log("1: "+act1+" 2: "+act2);
+       key=2;
+       addText();
+       init_animation(0,Math.PI/4,1);
+     break;
+     case(act1==2 && act2==1):
+       removeText();
+       console.log("1: "+act1+" 2: "+act2);
+       key=3;
+       addText();
+       init_animation(0,Math.PI/4,1);
+     break;
+     case(act1==2 && act2==2):
+       removeText();
+       console.log("1: "+act1+" 2: "+act2);
+       key=4;
+       addText();
+       init_animation(0,Math.PI/4,1);
+     break;
+  }
+  act1 = 0;
+  act2 = 0;
+  turn = 0;
 }
 
 var keyboard = new THREEx.KeyboardState();
-var key;
+
 keyboard.domElement.addEventListener('keydown',function(event){
   if (event.repeat)
     return;  
-  else if(keyboard.eventMatches(event,"0")){    // 0: Set camera to neutral position, view reset
-    actions("0");
+  else if(keyboard.eventMatches(event,"1")){    // 0: Set camera to neutral position, view reset
+    if (turn == 0){act1=1;turn++;}
+    else{act2 = 1; turn = 0; takeAction();}
   }
-  else if(keyboard.eventMatches(event,"U")){ 
-    (key == "U")? init_animation(p1,p0,time_length) : (init_animation(0,Math.PI/4,10), key = "U")}  
-  else if(keyboard.eventMatches(event,"W")){ 
-    (key == "W")? init_animation(p1,p0,time_length) : (init_animation(0,Math.PI/4,0.05), key = "W")} 
+  else if(keyboard.eventMatches(event,"2")){    // 0: Set camera to neutral position, view reset
+    if (turn == 0){act1=2;turn++;}
+    else{act2 = 2; turn = 0; takeAction();}
+  }
+ 
 
 
   // TO-DO: BIND KEYS TO YOUR JUMP CUTS AND ANIMATIONS
