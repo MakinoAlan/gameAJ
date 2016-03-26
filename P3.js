@@ -120,17 +120,18 @@ function makeCube() {
 
 
 var components_a = [];
+var material_a = new THREE.MeshBasicMaterial( {color: 'black'});
 
 // Alan
 function addRob1(){
   // set the general material
-  var normalMaterial = new THREE.MeshNormalMaterial();
+  //var normalMaterial = new THREE.MeshNormalMaterial( {color: 'red'});
   
   // set the torso of the character
   var torsoGeometry = makeCube();
   var torso_scale = new THREE.Matrix4().set(3,0,0,0, 0,7,0,0, 0,0,3,0, 0,0,0,1);
   torsoGeometry.applyMatrix(torso_scale);
-  var torso = new THREE.Mesh(torsoGeometry,normalMaterial);
+  var torso = new THREE.Mesh(torsoGeometry,material_a);
   torso.position.set(-10,7,0);
   scene.add(torso);
   components_a.push(torso);
@@ -139,7 +140,7 @@ function addRob1(){
   var arm_left_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,5,0, 0,0,0,1);
   var arm_leftGeometry = makeCube();
   arm_leftGeometry.applyMatrix(arm_left_scale);
-  var arm_left = new THREE.Mesh(arm_leftGeometry,normalMaterial);
+  var arm_left = new THREE.Mesh(arm_leftGeometry,material_a);
   arm_left.position.set(0,1,-3);
   torso.add(arm_left);
   components_a.push(arm_left);
@@ -147,7 +148,7 @@ function addRob1(){
   var arm_right_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,5,0, 0,0,0,1);
   var arm_rightGeometry = makeCube();
   arm_rightGeometry.applyMatrix(arm_right_scale);
-  var arm_right = new THREE.Mesh(arm_rightGeometry,normalMaterial);
+  var arm_right = new THREE.Mesh(arm_rightGeometry,material_a);
   arm_right.position.set(0,1,3);
   torso.add(arm_right);
   components_a.push(arm_right);
@@ -155,7 +156,7 @@ function addRob1(){
   var leg_left_scale = new THREE.Matrix4().set(1,0,0,0, 0,4,0,0, 0,0,1,0, 0,0,0,1);
   var leg_left_Geometry = makeCube();
   leg_left_Geometry.applyMatrix(leg_left_scale);
-  var leg_left = new THREE.Mesh(leg_left_Geometry,normalMaterial);
+  var leg_left = new THREE.Mesh(leg_left_Geometry,material_a);
   leg_left.position.set(0,-5,1);
   torso.add(leg_left);
   components_a.push(leg_left);
@@ -163,7 +164,7 @@ function addRob1(){
   var leg_right_scale = new THREE.Matrix4().set(1,0,0,0, 0,4,0,0, 0,0,1,0, 0,0,0,1);
   var leg_right_Geometry = makeCube();
   leg_right_Geometry.applyMatrix(leg_right_scale);
-  var leg_right = new THREE.Mesh(leg_right_Geometry,normalMaterial);
+  var leg_right = new THREE.Mesh(leg_right_Geometry,material_a);
   leg_right.position.set(0,-5,-1);
   torso.add(leg_right);
   components_a.push(leg_right);
@@ -174,7 +175,7 @@ function addRob1(){
   var neck_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
   var neck_Geometry = new THREE.CylinderGeometry(0.6,0.6,0.6,50);
   neck_Geometry.applyMatrix(neck_scale);
-  var neck = new THREE.Mesh(neck_Geometry,normalMaterial);
+  var neck = new THREE.Mesh(neck_Geometry,material_a);
   neck.position.set(0,3.8,0);
   torso.add(neck);
   components_a.push(neck);
@@ -182,7 +183,7 @@ function addRob1(){
   var head_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
   var head_Geometry = new THREE.SphereGeometry(1.5, 35, 35);
   head_Geometry.applyMatrix(head_scale);
-  var head = new THREE.Mesh(head_Geometry,normalMaterial);
+  var head = new THREE.Mesh(head_Geometry,material_a);
   head.position.set(0,1.6,0);
   neck.add(head);
   components_a.push(head);
@@ -191,7 +192,7 @@ function addRob1(){
   var hilt_scale = new THREE.Matrix4().set(0.7,0,0,0, 0,1.3,0,0, 0,0,0.5,0, 0,0,0,1);
   var hilt_Geometry = new makeCube();
   hilt_Geometry.applyMatrix(hilt_scale);
-  var hilt = new THREE.Mesh(hilt_Geometry,normalMaterial);
+  var hilt = new THREE.Mesh(hilt_Geometry,material_a);
   hilt.position.set(0,1,2);
   arm_right.add(hilt);
   components_a.push(hilt);
@@ -199,7 +200,7 @@ function addRob1(){
   var hilt1_scale = new THREE.Matrix4().set(1.5,0,0,0, 0,0.7,0,0, 0,0,0.6,0, 0,0,0,1);
   var hilt1_Geometry = new THREE.CylinderGeometry(1,1,0.2,50);
   hilt1_Geometry.applyMatrix(hilt1_scale);
-  var hilt1 = new THREE.Mesh(hilt1_Geometry,normalMaterial);
+  var hilt1 = new THREE.Mesh(hilt1_Geometry,material_a);
   hilt1.position.set(0,0.6,0);
   hilt.add(hilt1);
   components_a.push(hilt1);
@@ -207,7 +208,7 @@ function addRob1(){
   var blade_scale = new THREE.Matrix4().set(0.8,0,0,0, 0,1.5,0,0, 0,0,0.2,0, 0,0,0,1);
   var blade_Geometry = new THREE.CylinderGeometry(1,1,5,50);
   blade_Geometry.applyMatrix(blade_scale);
-  var blade = new THREE.Mesh(blade_Geometry,normalMaterial);
+  var blade = new THREE.Mesh(blade_Geometry,material_a);
   blade.position.set(0,4,0);
   hilt1.add(blade);
   components_a.push(blade);
@@ -215,7 +216,7 @@ function addRob1(){
   var sheild_scale = new THREE.Matrix4().set(5,0,0,0, 0,6,0,0, 0,0,0.3,0, 0,0,0,1);
   var sheild_Geometry = makeCube();
   sheild_Geometry.applyMatrix(sheild_scale);
-  var sheild = new THREE.Mesh(sheild_Geometry,normalMaterial);
+  var sheild = new THREE.Mesh(sheild_Geometry,material_a);
   sheild.position.set(0,0,-2.5);
   arm_left.add(sheild);
   components_a.push(sheild)
@@ -279,25 +280,27 @@ function addRob2(){
 
 
 var texts = [];
+
+var textmaterial = new THREE.MeshNormalMaterial();
 var text_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,22, 0,0,1,-5, 0,0,0,1);
 var text0_geo = new THREE. TextGeometry("START",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
-var text0 = new THREE.Mesh(text0_geo,material);
+var text0 = new THREE.Mesh(text0_geo,textmaterial);
 text0.position.set(0,22,-5);
 texts.push(text0);
 var text1_geo = new THREE. TextGeometry("ATTACK - ATTACK",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
-var text1 = new THREE.Mesh(text1_geo,material);
+var text1 = new THREE.Mesh(text1_geo,textmaterial);
 texts.push(text1);
 text1.position.set(0,22,-5);
 var text2_geo = new THREE. TextGeometry("ATTACK - DEFEND",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
-var text2 = new THREE.Mesh(text2_geo,material);
+var text2 = new THREE.Mesh(text2_geo,textmaterial);
 texts.push(text2);
 text2.position.set(0,22,-5);
 var text3_geo = new THREE. TextGeometry("DEFEND - ATTACK",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
-var text3 = new THREE.Mesh(text3_geo,material);
+var text3 = new THREE.Mesh(text3_geo,textmaterial);
 texts.push(text3);
 text3.position.set(0,22,-5);
 var text4_geo = new THREE. TextGeometry("DEFEND - DEFEND",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
-var text4 = new THREE.Mesh(text4_geo,material);
+var text4 = new THREE.Mesh(text4_geo,textmaterial);
 texts.push(text4);
 text4.position.set(0,22,-5);
 scene.add(texts[0]);
@@ -504,11 +507,17 @@ function onMouseDown(event){
 
         raycaster.set(camera.position, vector.sub(camera.position).normalize());
 
-        var intersects = raycaster.intersectObjects(components, false);
+        var intersects1 = raycaster.intersectObjects(components, false);
+        var intersects2 = raycaster.intersectObjects(components_a, false);
 
-        if (intersects.length > 0) {
+        if (intersects1.length > 0) {
 
-            intersects[0].object.material.color.setRGB(Math.random(),Math.random(),Math.random());
+            intersects1[0].object.material.color.setRGB(Math.random(),Math.random(),Math.random());
+
+      }
+        if (intersects2.length > 0) {
+
+            intersects2[0].object.material.color.setRGB(Math.random(),Math.random(),Math.random());
 
       }
 }
