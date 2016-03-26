@@ -448,7 +448,9 @@ function updateBody() {
       }
 
       p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
-
+      
+      rob1_attack();
+      rob2_defend();
 
       
       break
@@ -463,7 +465,8 @@ function updateBody() {
       }
 
       p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
-
+      rob1_defend();
+      rob2_attack();
 
       
       break
