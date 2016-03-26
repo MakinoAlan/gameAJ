@@ -135,14 +135,20 @@ function addRob1(){
   torso.position.set(-10,7,0);
   scene.add(torso);
   components_a.push(torso);
+
+  var ball1_Geometry = new THREE.SphereGeometry(0.5,35,35);
+  var ball1 = new THREE.Mesh(ball1_Geometry,material_a);
+  ball1.position.set(0,1,-1.2);
+  torso.add(ball1);
+  components_a.push(ball1);
   
   // set arms and leg for the character
   var arm_left_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,5,0, 0,0,0,1);
   var arm_leftGeometry = makeCube();
   arm_leftGeometry.applyMatrix(arm_left_scale);
   var arm_left = new THREE.Mesh(arm_leftGeometry,material_a);
-  arm_left.position.set(0,1,-3);
-  torso.add(arm_left);
+  arm_left.position.set(0,0,-2.5);
+  ball1.add(arm_left);
   components_a.push(arm_left);
   
   var arm_right_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,5,0, 0,0,0,1);
@@ -220,6 +226,7 @@ function addRob1(){
   sheild.position.set(0,0,-2.5);
   arm_left.add(sheild);
   components_a.push(sheild)
+
 
   //window.addEventListener( 'mousemove', onDocumentMouseDown, false );
 
@@ -331,6 +338,20 @@ function init_animation(p_start,p_end,t_length){
   return;
 }
 
+function rob1_defend() {
+  var axis = new THREE.Vector3(0,1,0);
+  var rotateY = new THREE.Matrix4().set(Math.cos(p),0, Math.sin(p),  0, 
+                                            0, 1,0,   0, 
+                                            -Math.sin(p),0, Math.cos(p),   0,
+                                            0,        0,         0,        1);
+  components_a[1].rotateOnAxis(axis,-Math.PI/120);
+}
+
+function rob2_defend() {
+
+}
+
+
 function updateBody() {
   switch(true)
   {
@@ -403,11 +424,8 @@ function updateBody() {
 
       p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
 
-
-      for(var i=0;i<6;i++){
-              components[i].translateX(0.1);
-      }
-
+      rob1_defend();
+      rob2_defend();
       
       break
 
