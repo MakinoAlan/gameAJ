@@ -121,6 +121,7 @@ THREE.Object3D.prototype.setMatrix = function(a) {
   this.matrix.decompose(this.position,this.quaternion,this.scale);
 }
 
+
 // Alan
 function addRob1(){
   // set the general material
@@ -136,20 +137,20 @@ function addRob1(){
   scene.add(torso);
 
   // set arms and leg for the character
-  var arm_left_scale = new THREE.Matrix4().set(5,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
+  var arm_left_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,5,0, 0,0,0,1);
   var arm_leftGeometry = makeCube();
   arm_leftGeometry.applyMatrix(arm_left_scale);
   var arm_left = new THREE.Mesh(arm_leftGeometry,normalMaterial);
-  var arm_left_pos = new THREE.Matrix4().set(1,0,0,3, 0,1,0,2, 0,0,1,0, 0,0,0,1);
+  var arm_left_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,2, 0,0,1,3, 0,0,0,1);
   var arm_left_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,arm_left_pos);
   arm_left.setMatrix(arm_left_pos_abs);
   scene.add(arm_left);
 
-  var arm_right_scale = new THREE.Matrix4().set(5,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
+  var arm_right_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,5,0, 0,0,0,1);
   var arm_rightGeometry = makeCube();
   arm_rightGeometry.applyMatrix(arm_right_scale);
   var arm_right = new THREE.Mesh(arm_rightGeometry,normalMaterial);
-  var arm_right_pos = new THREE.Matrix4().set(1,0,0,-3, 0,1,0,2, 0,0,1,0, 0,0,0,1);
+  var arm_right_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,2, 0,0,1,-3, 0,0,0,1);
   var arm_right_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,arm_right_pos);
   arm_right.setMatrix(arm_right_pos_abs);
   scene.add(arm_right);
@@ -158,16 +159,7 @@ function addRob1(){
   var leg_left_Geometry = makeCube();
   leg_left_Geometry.applyMatrix(leg_left_scale);
   var leg_left = new THREE.Mesh(leg_left_Geometry,normalMaterial);
-  var leg_left_pos = new THREE.Matrix4().set(1,0,0,1, 0,1,0,-5, 0,0,1,0, 0,0,0,1);
-  var leg_left_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,leg_left_pos);
-  leg_left.setMatrix(leg_left_pos_abs);
-  scene.add(leg_left);
-
-  var leg_left_scale = new THREE.Matrix4().set(1,0,0,0, 0,4,0,0, 0,0,1,0, 0,0,0,1);
-  var leg_left_Geometry = makeCube();
-  leg_left_Geometry.applyMatrix(leg_left_scale);
-  var leg_left = new THREE.Mesh(leg_left_Geometry,normalMaterial);
-  var leg_left_pos = new THREE.Matrix4().set(1,0,0,-1, 0,1,0,-5, 0,0,1,0, 0,0,0,1);
+  var leg_left_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,-5, 0,0,1,1, 0,0,0,1);
   var leg_left_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,leg_left_pos);
   leg_left.setMatrix(leg_left_pos_abs);
   scene.add(leg_left);
@@ -176,10 +168,12 @@ function addRob1(){
   var leg_right_Geometry = makeCube();
   leg_right_Geometry.applyMatrix(leg_right_scale);
   var leg_right = new THREE.Mesh(leg_right_Geometry,normalMaterial);
-  var leg_right_pos = new THREE.Matrix4().set(1,0,0,1, 0,1,0,-5, 0,0,1,0, 0,0,0,1);
+  var leg_right_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,-5, 0,0,1,-1, 0,0,0,1);
   var leg_right_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,leg_right_pos);
   leg_right.setMatrix(leg_right_pos_abs);
   scene.add(leg_right);
+
+  
 
   // set neck and head for the character
   var neck_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
@@ -205,7 +199,7 @@ function addRob1(){
   var hilt_Geometry = new makeCube();
   hilt_Geometry.applyMatrix(hilt_scale);
   var hilt = new THREE.Mesh(hilt_Geometry,normalMaterial);
-  var hilt_pos = new THREE.Matrix4().set(1,0,0,8, 0,1,0,1, 0,0,1,0, 0,0,0,1);
+  var hilt_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,1, 0,0,1,8, 0,0,0,1);
   var hilt_pos_abs = new THREE.Matrix4().multiplyMatrices(arm_right_pos_abs,hilt_pos);
   hilt.setMatrix(hilt_pos_abs);
   scene.add(hilt);
@@ -228,11 +222,11 @@ function addRob1(){
   blade.setMatrix(blade_pos_abs);
   scene.add(blade);
 
-  var sheild_scale = new THREE.Matrix4().set(0.3,0,0,0, 0,6,0,0, 0,0,5,0, 0,0,0,1);
+  var sheild_scale = new THREE.Matrix4().set(5,0,0,0, 0,6,0,0, 0,0,0.3,0, 0,0,0,1);
   var sheild_Geometry = makeCube();
   sheild_Geometry.applyMatrix(sheild_scale);
   var sheild = new THREE.Mesh(sheild_Geometry,normalMaterial);
-  var sheild_pos = new THREE.Matrix4().set(1,0,0,-8.5, 0,1,0,0, 0,0,1,0, 0,0,0,1);
+  var sheild_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,-8.5, 0,0,0,1);
   var sheild_pos_abs = new THREE.Matrix4().multiplyMatrices(arm_left_pos_abs,sheild_pos);
   sheild.setMatrix(sheild_pos_abs);
   scene.add(sheild);
