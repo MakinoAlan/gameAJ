@@ -150,13 +150,19 @@ function addRob1(){
   arm_left.position.set(0,0,-2.5);
   ball1.add(arm_left);
   components_a.push(arm_left);
+
+  var ball2_Geometry = new THREE.SphereGeometry(0.5,35,35);
+  var ball2 = new THREE.Mesh(ball2_Geometry,material_a);
+  ball2.position.set(0,1,1.2);
+  torso.add(ball2);
+  components_a.push(ball2);
   
   var arm_right_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,5,0, 0,0,0,1);
   var arm_rightGeometry = makeCube();
   arm_rightGeometry.applyMatrix(arm_right_scale);
   var arm_right = new THREE.Mesh(arm_rightGeometry,material_a);
-  arm_right.position.set(0,1,3);
-  torso.add(arm_right);
+  arm_right.position.set(0,0,2.5);
+  ball2.add(arm_right);
   components_a.push(arm_right);
   
   var leg_left_scale = new THREE.Matrix4().set(1,0,0,0, 0,4,0,0, 0,0,1,0, 0,0,0,1);
@@ -359,6 +365,31 @@ function rob2_defend(){
   components[3].rotateZ(-Math.PI/120);
   rob2_wall.scale.y+=0.02;
 }
+  var counter = 0;
+function rob1_attack(p) {
+  console.log(counter);
+  if(counter<30){
+    var axis = new THREE.Vector3(0,1,0);
+    var rotateY = new THREE.Matrix4().set(Math.cos(p),0, Math.sin(p),  0, 
+                                            0, 1,0,   0, 
+                                            -Math.sin(p),0, Math.cos(p),   0,
+                                            0,        0,         0,        1);
+    components_a[3].rotateOnAxis(axis,Math.PI/60);
+    counter++;
+  }
+  else if(30<=counter && counter<45){
+    var rotateY = new THREE.Matrix4().set(Math.cos(p),0, Math.sin(p),  0, 
+                                            0, 1,0,   0, 
+                                            -Math.sin(p),0, Math.cos(p),   0,
+                                            0,        0,         0,        1);
+    components_a[10].rotateY(Math.PI/30);
+    counter++;
+  }
+  else if(45<=counter && counter<60){
+    components_a[3].rotateX(Math.PI/40);
+  }
+}
+
 function updateBody() {
   switch(true)
   {
@@ -393,12 +424,7 @@ function updateBody() {
       }
 
       p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
-
-
-
-      for(var i=0;i<6;i++){
-              components[i].translateX(0.1);
-      }
+      rob1_attack(p);
 
       
       break
