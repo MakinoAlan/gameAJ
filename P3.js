@@ -124,6 +124,7 @@ THREE.Object3D.prototype.setMatrix = function(a) {
 }
 
 
+var components_a = [];
 // Alan
 function addRob1(){
   // set the general material
@@ -137,6 +138,7 @@ function addRob1(){
   var torsoMatrix = new THREE.Matrix4().set(1,0,0,-10, 0,1,0,7, 0,0,1,0, 0,0,0,1);
   torso.setMatrix(torsoMatrix);
   scene.add(torso);
+  components_a.push(torso);
 
   // set arms and leg for the character
   var arm_left_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,5,0, 0,0,0,1);
@@ -147,6 +149,7 @@ function addRob1(){
   var arm_left_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,arm_left_pos);
   arm_left.setMatrix(arm_left_pos_abs);
   scene.add(arm_left);
+  components_a.push(arm_left);
 
   var arm_right_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,5,0, 0,0,0,1);
   var arm_rightGeometry = makeCube();
@@ -156,6 +159,7 @@ function addRob1(){
   var arm_right_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,arm_right_pos);
   arm_right.setMatrix(arm_right_pos_abs);
   scene.add(arm_right);
+  components_a.push(arm_right);
 
   var leg_left_scale = new THREE.Matrix4().set(1,0,0,0, 0,4,0,0, 0,0,1,0, 0,0,0,1);
   var leg_left_Geometry = makeCube();
@@ -165,6 +169,7 @@ function addRob1(){
   var leg_left_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,leg_left_pos);
   leg_left.setMatrix(leg_left_pos_abs);
   scene.add(leg_left);
+  components_a.push(leg_left);
 
   var leg_right_scale = new THREE.Matrix4().set(1,0,0,0, 0,4,0,0, 0,0,1,0, 0,0,0,1);
   var leg_right_Geometry = makeCube();
@@ -174,6 +179,7 @@ function addRob1(){
   var leg_right_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,leg_right_pos);
   leg_right.setMatrix(leg_right_pos_abs);
   scene.add(leg_right);
+  components_a.push(leg_right);
 
   
 
@@ -186,6 +192,7 @@ function addRob1(){
   var neck_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,neck_pos);
   neck.setMatrix(neck_pos_abs);
   scene.add(neck);
+  components_a.push(neck);
 
   var head_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
   var head_Geometry = new THREE.SphereGeometry(1.5, 35, 35);
@@ -195,6 +202,7 @@ function addRob1(){
   var head_pos_abs = new THREE.Matrix4().multiplyMatrices(neck_pos_abs,head_pos);
   head.setMatrix(head_pos_abs);
   scene.add(head);
+  components_a.push(head);
 
   // draw the sword and sheild
   var hilt_scale = new THREE.Matrix4().set(0.7,0,0,0, 0,1.3,0,0, 0,0,0.5,0, 0,0,0,1);
@@ -205,6 +213,7 @@ function addRob1(){
   var hilt_pos_abs = new THREE.Matrix4().multiplyMatrices(arm_right_pos_abs,hilt_pos);
   hilt.setMatrix(hilt_pos_abs);
   scene.add(hilt);
+  components_a.push(hilt);
 
   var hilt1_scale = new THREE.Matrix4().set(1.5,0,0,0, 0,0.7,0,0, 0,0,0.6,0, 0,0,0,1);
   var hilt1_Geometry = new THREE.CylinderGeometry(1,1,0.2,50);
@@ -214,6 +223,7 @@ function addRob1(){
   var hilt1_pos_abs = new THREE.Matrix4().multiplyMatrices(hilt_pos_abs,hilt1_pos);
   hilt1.setMatrix(hilt1_pos_abs);
   scene.add(hilt1);
+  components_a.push(hilt1);
 
   var blade_scale = new THREE.Matrix4().set(0.8,0,0,0, 0,1.5,0,0, 0,0,0.2,0, 0,0,0,1);
   var blade_Geometry = new THREE.CylinderGeometry(1,1,5,50);
@@ -223,6 +233,7 @@ function addRob1(){
   var blade_pos_abs = new THREE.Matrix4().multiplyMatrices(hilt1_pos_abs,blade_pos);
   blade.setMatrix(blade_pos_abs);
   scene.add(blade);
+  components_a.push(blade);
 
   var sheild_scale = new THREE.Matrix4().set(5,0,0,0, 0,6,0,0, 0,0,0.3,0, 0,0,0,1);
   var sheild_Geometry = makeCube();
@@ -232,6 +243,7 @@ function addRob1(){
   var sheild_pos_abs = new THREE.Matrix4().multiplyMatrices(arm_left_pos_abs,sheild_pos);
   sheild.setMatrix(sheild_pos_abs);
   scene.add(sheild);
+  components_a.push(sheild)
 }
 
 // Jack
@@ -340,37 +352,12 @@ function updateBody() {
 
       var torsoRotMatrix = new THREE.Matrix4().multiplyMatrices(components[0].matrix,rotateZ);
       components [0].setMatrix(torsoRotMatrix); 
-      var torsoRotMatrix1 = new THREE.Matrix4().multiplyMatrices(components[1].matrix,rotateZ);
-      components [1].setMatrix(torsoRotMatrix1); 
       break
 
       // TO-DO: IMPLEMENT JUMPCUT/ANIMATION FOR EACH KEY!
       // Note: Remember spacebar sets jumpcut/animate!
       
-      case(key == "W" && animate):
-      var time = clock.getElapsedTime(); // t seconds passed since the clock started.
 
-      if (time > time_end){
-        p = p1;
-        animate = false;
-        break;
-      }
-
-      p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
-
-      var rotateZ = new THREE.Matrix4().set(1,        0,         0,        -p , 
-                                            0, 1,0, 0, 
-                                            0, 0, 1, 0,
-                                            0,        0,         0,        1);
-
-      components [0].setMatrix(new THREE.Matrix4().multiplyMatrices(components[0].matrix,rotateZ)); 
-        components [1].setMatrix(new THREE.Matrix4().multiplyMatrices(components[1].matrix,rotateZ)); 
-          components [2].setMatrix(new THREE.Matrix4().multiplyMatrices(components[2].matrix,rotateZ)); 
-            components [3].setMatrix(new THREE.Matrix4().multiplyMatrices(components[3].matrix,rotateZ)); 
-              components [4].setMatrix(new THREE.Matrix4().multiplyMatrices(components[4].matrix,rotateZ)); 
-              components [5].setMatrix(new THREE.Matrix4().multiplyMatrices(components[5].matrix,rotateZ)); 
- 
-      break
 
     default:
       break;
@@ -393,8 +380,6 @@ keyboard.domElement.addEventListener('keydown',function(event){
   }
   else if(keyboard.eventMatches(event,"U")){ 
     (key == "U")? init_animation(p1,p0,time_length) : (init_animation(0,Math.PI/4,10), key = "U")}  
-  else if(keyboard.eventMatches(event,"W")){ 
-    (key == "W")? init_animation(p1,p0,time_length) : (init_animation(0,Math.PI/4,0.05), key = "W")} 
 
 
   // TO-DO: BIND KEYS TO YOUR JUMP CUTS AND ANIMATIONS
