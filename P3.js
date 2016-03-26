@@ -350,11 +350,6 @@ function updateBody() {
 
       p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
 
-      var rotateZ = new THREE.Matrix4().set(1,        0,         0,        -p/10 , 
-                                            0, 1,0, 0, 
-                                            0, 0, 1, 0,
-                                            0,        0,         0,        1);
-
 
  
       break
@@ -371,10 +366,43 @@ function updateBody() {
 
       p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
 
-      var rotateZ = new THREE.Matrix4().set(1,        0,         0,        0, 
-                                            0, Math.cos(-p),-Math.sin(-p), 0, 
-                                            0, Math.sin(-p), Math.cos(-p), 0,
-                                            0,        0,         0,        1);
+
+
+      for(var i=0;i<6;i++){
+              components[i].translateX(0.1);
+      }
+
+      
+      break
+
+      case(key == 3 && animate):
+      var time = clock.getElapsedTime(); // t seconds passed since the clock started.
+
+      if (time > time_end){
+        p = p1;
+        animate = false;
+        resetBody();
+        break;
+      }
+
+      p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
+
+
+      
+      break
+
+      case(key == 4 && animate):
+      var time = clock.getElapsedTime(); // t seconds passed since the clock started.
+
+      if (time > time_end){
+        p = p1;
+        animate = false;
+        resetBody();
+        break;
+      }
+
+      p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
+
 
       for(var i=0;i<6;i++){
               components[i].translateX(0.1);
