@@ -273,7 +273,7 @@ function addRob2(){
   var body_geo = new THREE.CylinderGeometry( 2, 2, 4, 32 );
   var body = new THREE.Mesh(body_geo,material);
   scene.add(body);
-  body.position.set(10,4,0);
+  body.position.set(1,4,0);
   components.push(body);
   init_pos.push(new THREE.Vector3());
 
@@ -317,25 +317,34 @@ function addRob2(){
   scene.add(r_leg);
   components.push(r_leg);
 
+  var renderer = new THREE.CanvasRenderer();
+  renderer.setSize( window.innerWidth, window.innerHeight );
+
   window.addEventListener( 'mousedown', onDocumentMouseDown, false );
+  window.addEventListener( 'resize', onWindowResize, false );
 
   r_leg.position.set(10,1,0.8);
   //init_pos.push(r_leg_pos_abs);
 }
 
-var mouse = new THREE.Vector2(), INTERSECTED;
+var mouse = new THREE.Vector3();
 function onDocumentMouseDown( event ) {
-        var torso = components[0];
+        event.preventDefault(); 
         mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
         mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
         var projector = new THREE.Projector();
         var raycaster = new THREE.Raycaster();
         raycaster.setFromCamera( mouse, camera );
         //var raycaster = projector.pickingRay( mouse.clone(), camera);
-        var intersects = raycaster.intersectObjects( scene.children );
+        var intersects = raycaster.intersectObjects( components );
         if( intersects.length > 0) {
           intersects[0].object.material.color.setRGB(Math.random(),Math.random(),Math.random());
         }
+      }
+function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize( window.innerWidth, window.innerHeight );
       }
 
 /*
