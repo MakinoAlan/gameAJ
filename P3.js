@@ -316,29 +316,13 @@ function addRob2(){
   var r_leg = new THREE.Mesh(r_leg_geo,material);
   scene.add(r_leg);
   components.push(r_leg);
-
-  window.addEventListener( 'mousedown', onDocumentMouseDown, false );
-
   r_leg.position.set(10,1,0.8);
   //init_pos.push(r_leg_pos_abs);
 }
 
-var mouse = new THREE.Vector2(), INTERSECTED;
-function onDocumentMouseDown( event ) {
-        var torso = components[0];
-        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-        mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-        var projector = new THREE.Projector();
-        var raycaster = new THREE.Raycaster();
-        raycaster.setFromCamera( mouse, camera );
-        //var raycaster = projector.pickingRay( mouse.clone(), camera);
-        var intersects = raycaster.intersectObjects( scene.children );
-        if( intersects.length > 0) {
-          intersects[0].object.material.color.setRGB(Math.random(),Math.random(),Math.random());
-        }
-      }
 
-/*
+
+
 var texts = [];
 var text_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,22, 0,0,1,-5, 0,0,0,1);
 
@@ -368,7 +352,7 @@ texts.push(text4);
 text4.position.set(0,22,-5);
 
 scene.add(texts[0]);
-*/
+
 
 //addRob1();
 addRob2();
@@ -398,31 +382,12 @@ function init_animation(p_start,p_end,t_length){
 function updateBody() {
   switch(true)
   {
-      case(key == "U" && animate):
-      var time = clock.getElapsedTime(); // t seconds passed since the clock started.
-
-      if (time > time_end){
-        p = p1;
-        animate = false;
-        break;
-      }
-
-      p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
-
-      var rotateZ = new THREE.Matrix4().set(1,        0,         0,        0, 
-                                            0, Math.cos(-p),-Math.sin(-p), 0, 
-                                            0, Math.sin(-p), Math.cos(-p), 0,
-                                            0,        0,         0,        1);
-
-      var torsoRotMatrix = new THREE.Matrix4().multiplyMatrices(components[0].matrix,rotateZ);
-      components [0].setMatrix(torsoRotMatrix); 
-      break
 
       // TO-DO: IMPLEMENT JUMPCUT/ANIMATION FOR EACH KEY!
       // Note: Remember spacebar sets jumpcut/animate!
       
 
-      case(key == 2 && animate):
+      case(key == 0 && animate):
       var time = clock.getElapsedTime(); // t seconds passed since the clock started.
 
       if (time > time_end){
@@ -462,6 +427,30 @@ function updateBody() {
       for(var i=0;i<6;i++){
               components[i].translateX(0.1);
       }
+
+      
+      break
+
+      case(key == 99 && animate):
+      var time = clock.getElapsedTime(); // t seconds passed since the clock started.
+
+      if (time > time_end){
+        p = p1;
+        animate = false;
+        resetBody();
+        break;
+      }
+
+      p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
+
+      var rotateZ = new THREE.Matrix4().set(1,        0,         0,        0, 
+                                            0, Math.cos(-p),-Math.sin(-p), 0, 
+                                            0, Math.sin(-p), Math.cos(-p), 0,
+                                            0,        0,         0,        1);
+
+     components[1].rotateZ(Math.PI/30);
+     components[2].rotateZ(Math.PI/30);
+     components[3].rotateZ(Math.PI/30);
 
       
       break
@@ -534,7 +523,8 @@ keyboard.domElement.addEventListener('keydown',function(event){
     else{act2 = 1; turn = 0; takeAction();}
   }
   else if(keyboard.eventMatches(event,"U")){ 
-    (key == "U")? init_animation(p1,p0,time_length) : (init_animation(0,Math.PI/4,10), key = "U")}  
+    console.log("11");key = 99; init_animation(0,Math.PI/4,1);
+  }  
   else if(keyboard.eventMatches(event,"2")){    // 0: Set camera to neutral position, view reset
     if (turn == 0){act1=2;turn++;}
     else{act2 = 2; turn = 0; takeAction();}
