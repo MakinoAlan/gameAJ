@@ -2,6 +2,8 @@
  * UBC CPSC 314, January 2016
  * Project 3 Template
  */
+$(document).ready(function(){
+
 var scene = new THREE.Scene();
 THREE.Object3D.prototype.setMatrix = function(a) {
   this.matrix=a;
@@ -357,16 +359,21 @@ function updateBody() {
 }
 //testMove();
 
+function actions(i){
+  $('#score').html(i);
+
+}
+
 var keyboard = new THREEx.KeyboardState();
 var key;
 keyboard.domElement.addEventListener('keydown',function(event){
   if (event.repeat)
     return;  
   else if(keyboard.eventMatches(event,"0")){    // 0: Set camera to neutral position, view reset
-    alert("0");
+    actions("0");
   }
   else if(keyboard.eventMatches(event,"U")){ 
-    (key == "U")? init_animation(p1,p0,time_length) : (init_animation(0,Math.PI/4,1), key = "U")}  
+    (key == "U")? init_animation(p1,p0,time_length) : (init_animation(0,Math.PI/4,10), key = "U")}  
 
 
   // TO-DO: BIND KEYS TO YOUR JUMP CUTS AND ANIMATIONS
@@ -376,6 +383,8 @@ keyboard.domElement.addEventListener('keydown',function(event){
 
 
     });
+
+
 var render = function() {
  updateBody();
  requestAnimationFrame(render);
@@ -383,3 +392,5 @@ var render = function() {
 }
 
 render();
+
+});
