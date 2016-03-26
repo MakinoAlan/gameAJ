@@ -266,7 +266,6 @@ function onDocumentMouseDown( event ) {
 // Jack
 
 var components = [];  // body, head, lhand, rhand, lleg, rleg
-var init_pos = [];
 var material = new THREE.MeshBasicMaterial( {color: 'green'} );
 
 function addRob2(){
@@ -276,49 +275,42 @@ function addRob2(){
   scene.add(body);
   body.position.set(10,4,0);
   components.push(body);
-  init_pos.push(new THREE.Vector3());
 
 
- 
   var head_geo = new THREE.DodecahedronGeometry(1, 0);
   var head = new THREE.Mesh(head_geo,material);
-  scene.add(head);
+  body.add(head);
   components.push(head);
-  head.position.set(10,7.5,0);
-  //init_pos.push(head_pos_abs);
+  head.position.set(0,3.5,0);
 
 
 
   var l_hand_geo = new THREE.BoxGeometry(1, 3, 1);
   var l_hand = new THREE.Mesh(l_hand_geo,material);
-  scene.add(l_hand);
+  body.add(l_hand);
   components.push(l_hand);
-  l_hand.position.set(10,4,-3);
-  //init_pos.push(l_hand_pos_abs);
+  l_hand.position.set(0,0,-3);
 
 
   var r_hand_geo = new THREE.BoxGeometry(1, 3, 1);
   var r_hand = new THREE.Mesh(r_hand_geo,material);
-  scene.add(r_hand);
+  body.add(r_hand);
   components.push(r_hand);
-  r_hand.position.set(10,4,3);
-  //init_pos.push(r_hand_pos_abs);
+  r_hand.position.set(0,0,3);
 
  
   var l_leg_geo = new THREE.BoxGeometry(1, 3, 1);
   var l_leg = new THREE.Mesh(l_leg_geo,material);
-  scene.add(l_leg);
+  body.add(l_leg);
   components.push(l_leg);
-  l_leg.position.set(10,1,-0.8);
-  //init_pos.push(l_leg_pos_abs);
+  l_leg.position.set(0,-3,-0.8);
 
 
   var r_leg_geo = new THREE.BoxGeometry(1, 3, 1);
   var r_leg = new THREE.Mesh(r_leg_geo,material);
-  scene.add(r_leg);
+  body.add(r_leg);
   components.push(r_leg);
-  r_leg.position.set(10,1,0.8);
-  //init_pos.push(r_leg_pos_abs);
+  r_leg.position.set(0,-3,0.8);
 }
 
 
@@ -326,32 +318,26 @@ function addRob2(){
 
 var texts = [];
 var text_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,22, 0,0,1,-5, 0,0,0,1);
-
 var text0_geo = new THREE. TextGeometry("START",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
 var text0 = new THREE.Mesh(text0_geo,material);
 text0.position.set(0,22,-5);
 texts.push(text0);
-
 var text1_geo = new THREE. TextGeometry("ATTACK - ATTACK",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
 var text1 = new THREE.Mesh(text1_geo,material);
 texts.push(text1);
 text1.position.set(0,22,-5);
-
 var text2_geo = new THREE. TextGeometry("ATTACK - DEFEND",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
 var text2 = new THREE.Mesh(text2_geo,material);
 texts.push(text2);
 text2.position.set(0,22,-5);
-
 var text3_geo = new THREE. TextGeometry("DEFEND - ATTACK",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
 var text3 = new THREE.Mesh(text3_geo,material);
 texts.push(text3);
 text3.position.set(0,22,-5);
-
 var text4_geo = new THREE. TextGeometry("DEFEND - DEFEND",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
 var text4 = new THREE.Mesh(text4_geo,material);
 texts.push(text4);
 text4.position.set(0,22,-5);
-
 scene.add(texts[0]);
 
 
@@ -449,9 +435,8 @@ function updateBody() {
                                             0, Math.sin(-p), Math.cos(-p), 0,
                                             0,        0,         0,        1);
 
-     components[1].rotateZ(Math.PI/30);
-     components[2].rotateZ(Math.PI/30);
-     components[3].rotateZ(Math.PI/30);
+     components[0].rotateZ(Math.PI/30);
+
 
       
       break
@@ -475,7 +460,7 @@ function removeText(){scene.remove(texts[key]);}
 function addText(){scene.add(texts[key]);}
 
 function resetBody(){
-
+  components[0].rotation.z=0;
 }
 
 function takeAction(){
@@ -570,6 +555,7 @@ var render = function() {
  updateBody();
  requestAnimationFrame(render);
  renderer.render(scene, camera);
+
 }
 
 render();
