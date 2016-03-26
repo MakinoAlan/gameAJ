@@ -4,12 +4,13 @@
  */
 $(document).ready(function(){
 
+
 var scene = new THREE.Scene();
 
 
 // SETUP RENDERER
 var renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0xffffff);
 document.body.appendChild(renderer.domElement);
 
@@ -118,7 +119,8 @@ function makeCube() {
 
 
 
-/*var components_a = [];
+var components_a = [];
+
 // Alan
 function addRob1(){
   // set the general material
@@ -129,138 +131,99 @@ function addRob1(){
   var torso_scale = new THREE.Matrix4().set(3,0,0,0, 0,7,0,0, 0,0,3,0, 0,0,0,1);
   torsoGeometry.applyMatrix(torso_scale);
   var torso = new THREE.Mesh(torsoGeometry,normalMaterial);
-  var torsoMatrix = new THREE.Matrix4().set(1,0,0,-10, 0,1,0,7, 0,0,1,0, 0,0,0,1);
-  torso.setMatrix(torsoMatrix);
+  torso.position.set(-10,7,0);
   scene.add(torso);
   components_a.push(torso);
-
+  
   // set arms and leg for the character
   var arm_left_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,5,0, 0,0,0,1);
   var arm_leftGeometry = makeCube();
   arm_leftGeometry.applyMatrix(arm_left_scale);
   var arm_left = new THREE.Mesh(arm_leftGeometry,normalMaterial);
-  var arm_left_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,2, 0,0,1,3, 0,0,0,1);
-  var arm_left_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,arm_left_pos);
-  arm_left.setMatrix(arm_left_pos_abs);
-  scene.add(arm_left);
+  arm_left.position.set(0,1,-3);
+  torso.add(arm_left);
   components_a.push(arm_left);
-
+  
   var arm_right_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,5,0, 0,0,0,1);
   var arm_rightGeometry = makeCube();
   arm_rightGeometry.applyMatrix(arm_right_scale);
   var arm_right = new THREE.Mesh(arm_rightGeometry,normalMaterial);
-  var arm_right_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,2, 0,0,1,-3, 0,0,0,1);
-  var arm_right_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,arm_right_pos);
-  arm_right.setMatrix(arm_right_pos_abs);
-  scene.add(arm_right);
+  arm_right.position.set(0,1,3);
+  torso.add(arm_right);
   components_a.push(arm_right);
-
+  
   var leg_left_scale = new THREE.Matrix4().set(1,0,0,0, 0,4,0,0, 0,0,1,0, 0,0,0,1);
   var leg_left_Geometry = makeCube();
   leg_left_Geometry.applyMatrix(leg_left_scale);
   var leg_left = new THREE.Mesh(leg_left_Geometry,normalMaterial);
-  var leg_left_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,-5, 0,0,1,1, 0,0,0,1);
-  var leg_left_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,leg_left_pos);
-  leg_left.setMatrix(leg_left_pos_abs);
-  scene.add(leg_left);
+  leg_left.position.set(0,-5,1);
+  torso.add(leg_left);
   components_a.push(leg_left);
-
+  
   var leg_right_scale = new THREE.Matrix4().set(1,0,0,0, 0,4,0,0, 0,0,1,0, 0,0,0,1);
   var leg_right_Geometry = makeCube();
   leg_right_Geometry.applyMatrix(leg_right_scale);
   var leg_right = new THREE.Mesh(leg_right_Geometry,normalMaterial);
-  var leg_right_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,-5, 0,0,1,-1, 0,0,0,1);
-  var leg_right_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,leg_right_pos);
-  leg_right.setMatrix(leg_right_pos_abs);
-  scene.add(leg_right);
+  leg_right.position.set(0,-5,-1);
+  torso.add(leg_right);
   components_a.push(leg_right);
 
   
-
+  
   // set neck and head for the character
   var neck_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
   var neck_Geometry = new THREE.CylinderGeometry(0.6,0.6,0.6,50);
   neck_Geometry.applyMatrix(neck_scale);
   var neck = new THREE.Mesh(neck_Geometry,normalMaterial);
-  var neck_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,3.8, 0,0,1,0, 0,0,0,1);
-  var neck_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,neck_pos);
-  neck.setMatrix(neck_pos_abs);
-  scene.add(neck);
+  neck.position.set(0,3.8,0);
+  torso.add(neck);
   components_a.push(neck);
-
+  
   var head_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
   var head_Geometry = new THREE.SphereGeometry(1.5, 35, 35);
   head_Geometry.applyMatrix(head_scale);
   var head = new THREE.Mesh(head_Geometry,normalMaterial);
-  var head_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,1.6, 0,0,1,0, 0,0,0,1);
-  var head_pos_abs = new THREE.Matrix4().multiplyMatrices(neck_pos_abs,head_pos);
-  head.setMatrix(head_pos_abs);
-  scene.add(head);
+  head.position.set(0,1.6,0);
+  neck.add(head);
   components_a.push(head);
-
+  
   // draw the sword and sheild
   var hilt_scale = new THREE.Matrix4().set(0.7,0,0,0, 0,1.3,0,0, 0,0,0.5,0, 0,0,0,1);
   var hilt_Geometry = new makeCube();
   hilt_Geometry.applyMatrix(hilt_scale);
   var hilt = new THREE.Mesh(hilt_Geometry,normalMaterial);
-  var hilt_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,1, 0,0,1,8, 0,0,0,1);
-  var hilt_pos_abs = new THREE.Matrix4().multiplyMatrices(arm_right_pos_abs,hilt_pos);
-  hilt.setMatrix(hilt_pos_abs);
-  scene.add(hilt);
+  hilt.position.set(0,1,2);
+  arm_right.add(hilt);
   components_a.push(hilt);
 
   var hilt1_scale = new THREE.Matrix4().set(1.5,0,0,0, 0,0.7,0,0, 0,0,0.6,0, 0,0,0,1);
   var hilt1_Geometry = new THREE.CylinderGeometry(1,1,0.2,50);
   hilt1_Geometry.applyMatrix(hilt1_scale);
   var hilt1 = new THREE.Mesh(hilt1_Geometry,normalMaterial);
-  var hilt1_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0.6, 0,0,1,0, 0,0,0,1);
-  var hilt1_pos_abs = new THREE.Matrix4().multiplyMatrices(hilt_pos_abs,hilt1_pos);
-  hilt1.setMatrix(hilt1_pos_abs);
-  scene.add(hilt1);
+  hilt1.position.set(0,0.6,0);
+  hilt.add(hilt1);
   components_a.push(hilt1);
 
   var blade_scale = new THREE.Matrix4().set(0.8,0,0,0, 0,1.5,0,0, 0,0,0.2,0, 0,0,0,1);
   var blade_Geometry = new THREE.CylinderGeometry(1,1,5,50);
   blade_Geometry.applyMatrix(blade_scale);
   var blade = new THREE.Mesh(blade_Geometry,normalMaterial);
-  var blade_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,4, 0,0,1,0, 0,0,0,1);
-  var blade_pos_abs = new THREE.Matrix4().multiplyMatrices(hilt1_pos_abs,blade_pos);
-  blade.setMatrix(blade_pos_abs);
-  scene.add(blade);
+  blade.position.set(0,4,0);
+  hilt1.add(blade);
   components_a.push(blade);
 
   var sheild_scale = new THREE.Matrix4().set(5,0,0,0, 0,6,0,0, 0,0,0.3,0, 0,0,0,1);
   var sheild_Geometry = makeCube();
   sheild_Geometry.applyMatrix(sheild_scale);
   var sheild = new THREE.Mesh(sheild_Geometry,normalMaterial);
-  var sheild_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,-8.5, 0,0,0,1);
-  var sheild_pos_abs = new THREE.Matrix4().multiplyMatrices(arm_left_pos_abs,sheild_pos);
-  sheild.setMatrix(sheild_pos_abs);
-  scene.add(sheild);
+  sheild.position.set(0,0,-2.5);
+  arm_left.add(sheild);
   components_a.push(sheild)
 
   //window.addEventListener( 'mousemove', onDocumentMouseDown, false );
-}
-=======
-}*/
 
-//var mouseVector = new THREE.Vector3(2 * (event.ClientX/window.innerWidth ) - 1, 1 - 2 * (event.ClientY / window.innerHeight));
-/*
-var mouse = new THREE.Vector2(), INTERSECTED;
-function onDocumentMouseDown( event ) {
-        var torso = components[0];
-        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-        mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-        var projector = new THREE.Projector();
-        var raycaster = new THREE.Raycaster();
-        raycaster.setFromCamera( mouse, camera );
-        //var raycaster = projector.pickingRay( mouse.clone(), camera);
-        var intersects = raycaster.intersectObjects( torso );
-        if( intersects.length > 0) {
-          intersects[0].object.material.color.setRGB(Math.random(),Math.random(),Math.random());
-        }
-      }
-      */
+}
+
 
 // Jack
 
@@ -273,7 +236,7 @@ function addRob2(){
   var body_geo = new THREE.CylinderGeometry( 2, 2, 4, 32 );
   var body = new THREE.Mesh(body_geo,material);
   scene.add(body);
-  body.position.set(1,4,0);
+  body.position.set(10,4,0);
   components.push(body);
   init_pos.push(new THREE.Vector3());
 
@@ -316,38 +279,11 @@ function addRob2(){
   var r_leg = new THREE.Mesh(r_leg_geo,material);
   scene.add(r_leg);
   components.push(r_leg);
-
-  var renderer = new THREE.CanvasRenderer();
-  renderer.setSize( window.innerWidth, window.innerHeight );
-
-  window.addEventListener( 'mousedown', onDocumentMouseDown, false );
-  window.addEventListener( 'resize', onWindowResize, false );
-
   r_leg.position.set(10,1,0.8);
-  //init_pos.push(r_leg_pos_abs);
 }
 
-var mouse = new THREE.Vector3();
-function onDocumentMouseDown( event ) {
-        event.preventDefault(); 
-        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-        mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-        var projector = new THREE.Projector();
-        var raycaster = new THREE.Raycaster();
-        raycaster.setFromCamera( mouse, camera );
-        //var raycaster = projector.pickingRay( mouse.clone(), camera);
-        var intersects = raycaster.intersectObjects( components );
-        if( intersects.length > 0) {
-          intersects[0].object.material.color.setRGB(Math.random(),Math.random(),Math.random());
-        }
-      }
-function onWindowResize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize( window.innerWidth, window.innerHeight );
-      }
 
-/*
+
 var texts = [];
 var text_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,22, 0,0,1,-5, 0,0,0,1);
 
@@ -377,9 +313,9 @@ texts.push(text4);
 text4.position.set(0,22,-5);
 
 scene.add(texts[0]);
-*/
 
-//addRob1();
+
+addRob1();
 addRob2();
 // SETUP UPDATE CALL-BACK
 
@@ -391,7 +327,7 @@ var time_start; // start time of animation
 var time_end; // end time of animation
 var p; // current frame
 var animate = false; // animate?
-// function init_animation()
+// function init_animati
 // Initializes parameters and sets animate flag to true.
 // Input: start position or angle, end position or angle, and total time of animation.
 function init_animation(p_start,p_end,t_length){
@@ -407,31 +343,12 @@ function init_animation(p_start,p_end,t_length){
 function updateBody() {
   switch(true)
   {
-      case(key == "U" && animate):
-      var time = clock.getElapsedTime(); // t seconds passed since the clock started.
-
-      if (time > time_end){
-        p = p1;
-        animate = false;
-        break;
-      }
-
-      p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
-
-      var rotateZ = new THREE.Matrix4().set(1,        0,         0,        0, 
-                                            0, Math.cos(-p),-Math.sin(-p), 0, 
-                                            0, Math.sin(-p), Math.cos(-p), 0,
-                                            0,        0,         0,        1);
-
-      var torsoRotMatrix = new THREE.Matrix4().multiplyMatrices(components[0].matrix,rotateZ);
-      components [0].setMatrix(torsoRotMatrix); 
-      break
 
       // TO-DO: IMPLEMENT JUMPCUT/ANIMATION FOR EACH KEY!
       // Note: Remember spacebar sets jumpcut/animate!
       
 
-      case(key == 2 && animate):
+      case(key == 0 && animate):
       var time = clock.getElapsedTime(); // t seconds passed since the clock started.
 
       if (time > time_end){
@@ -471,6 +388,30 @@ function updateBody() {
       for(var i=0;i<6;i++){
               components[i].translateX(0.1);
       }
+
+      
+      break
+
+      case(key == 99 && animate):
+      var time = clock.getElapsedTime(); // t seconds passed since the clock started.
+
+      if (time > time_end){
+        p = p1;
+        animate = false;
+        resetBody();
+        break;
+      }
+
+      p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
+
+      var rotateZ = new THREE.Matrix4().set(1,        0,         0,        0, 
+                                            0, Math.cos(-p),-Math.sin(-p), 0, 
+                                            0, Math.sin(-p), Math.cos(-p), 0,
+                                            0,        0,         0,        1);
+
+     components[1].rotateZ(Math.PI/30);
+     components[2].rotateZ(Math.PI/30);
+     components[3].rotateZ(Math.PI/30);
 
       
       break
@@ -543,7 +484,8 @@ keyboard.domElement.addEventListener('keydown',function(event){
     else{act2 = 1; turn = 0; takeAction();}
   }
   else if(keyboard.eventMatches(event,"U")){ 
-    (key == "U")? init_animation(p1,p0,time_length) : (init_animation(0,Math.PI/4,10), key = "U")}  
+    console.log("11");key = 99; init_animation(0,Math.PI/4,1);
+  }  
   else if(keyboard.eventMatches(event,"2")){    // 0: Set camera to neutral position, view reset
     if (turn == 0){act1=2;turn++;}
     else{act2 = 2; turn = 0; takeAction();}
@@ -559,6 +501,30 @@ keyboard.domElement.addEventListener('keydown',function(event){
 
     });
 
+
+
+window.addEventListener( 'mousedown', onMouseDown, false);
+
+var raycaster = new THREE.Raycaster();
+
+function onMouseDown(event){
+        event.preventDefault();
+        var dir = new THREE.Vector3();
+        var vector = new THREE.Vector3();
+        vector.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5); 
+
+        vector.unproject(camera);
+
+        raycaster.set(camera.position, vector.sub(camera.position).normalize());
+
+        var intersects = raycaster.intersectObjects(components, false);
+
+        if (intersects.length > 0) {
+
+            intersects[0].object.material.color.setRGB(Math.random(),Math.random(),Math.random());
+
+      }
+}
 
 var render = function() {
  updateBody();

@@ -3,32 +3,21 @@
     <meta charset="UTF-8">
     <title>CPSC 314 Project 3 January 2016</title>
     <style>
-      body { margin: 0; } canvas { width: 100%;
-      height: 100% }
+      body { margin: 0; } 
+      #canvas 
+      { width: 200px;
+        height: 200px;
+        margin: 100px;
+        padding: 0px;
+        position: static; 
+        top: 100px;
+        left: 100px;
+    }
     </style>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
   </head>
   <body>
-    <div id="control">
-      <p>Actions: 1 = attack, 2 = defend, (3 = restore, 4 = energy attack)</p>
-      <table class="table">
-          <tr>
-            <td>&nbsp</td>
-            <td>HP</td> 
-            <td>MP</td>
-          </tr>
-          <tr>
-            <td>p1</td>
-            <td>100</td> 
-            <td>0</td>
-          </tr><tr>
-            <td>p2</td>
-            <td>100</td> 
-            <td>0</td>
-          </tr>
-      </table>
-    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script src="js/three.min.js"></script>
