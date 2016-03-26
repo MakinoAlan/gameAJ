@@ -5,10 +5,8 @@
 $(document).ready(function(){
 
 var scene = new THREE.Scene();
-THREE.Object3D.prototype.setMatrix = function(a) {
-  this.matrix=a;
-  this.matrix.decompose(this.position,this.quaternion,this.scale);
-}
+
+
 // SETUP RENDERER
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -118,13 +116,9 @@ function makeCube() {
   return unitCube;
 }
 
-THREE.Object3D.prototype.setMatrix = function(a) {
-  this.matrix=a;
-  this.matrix.decompose(this.position,this.quaternion,this.scale);
-}
 
 
-var components_a = [];
+/*var components_a = [];
 // Alan
 function addRob1(){
   // set the general material
@@ -244,66 +238,64 @@ function addRob1(){
   sheild.setMatrix(sheild_pos_abs);
   scene.add(sheild);
   components_a.push(sheild)
-}
+}*/
 
 // Jack
 
 var components = [];  // body, head, lhand, rhand, lleg, rleg
+var init_pos = [];
 var material = new THREE.MeshBasicMaterial( {color: 'green'} );
 
 function addRob2(){
-  
-  var basePos= new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
-  
-  var body_pos = new THREE.Matrix4().set(1,0,0,10, 0,1,0,4.5, 0,0,1,0, 0,0,0,1);
-  var body_pos_abs = new THREE.Matrix4().multiplyMatrices(basePos,body_pos); 
+   
   var body_geo = new THREE.CylinderGeometry( 2, 2, 4, 32 );
   var body = new THREE.Mesh(body_geo,material);
-  body.setMatrix(body_pos_abs);
   scene.add(body);
+  body.position.set(10,4,0);
   components.push(body);
+  init_pos.push(new THREE.Vector3());
 
-  var head_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,3.5, 0,0,1,0, 0,0,0,1);
-  var head_pos_abs = new THREE.Matrix4().multiplyMatrices(body_pos_abs,head_pos); 
+
+ 
   var head_geo = new THREE.DodecahedronGeometry(1, 0);
   var head = new THREE.Mesh(head_geo,material);
-  head.setMatrix(head_pos_abs);
   scene.add(head);
   components.push(head);
+  head.position.set(10,7.5,0);
+  //init_pos.push(head_pos_abs);
 
 
-  var l_hand_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,-3, 0,0,0,1);
-  var l_hand_pos_abs = new THREE.Matrix4().multiplyMatrices(body_pos_abs,l_hand_pos); 
+
   var l_hand_geo = new THREE.BoxGeometry(1, 3, 1);
   var l_hand = new THREE.Mesh(l_hand_geo,material);
-  l_hand.setMatrix(l_hand_pos_abs);
   scene.add(l_hand);
   components.push(l_hand);
+  l_hand.position.set(10,4,-3);
+  //init_pos.push(l_hand_pos_abs);
 
-  var r_hand_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,3, 0,0,0,1);
-  var r_hand_pos_abs = new THREE.Matrix4().multiplyMatrices(body_pos_abs,r_hand_pos); 
+
   var r_hand_geo = new THREE.BoxGeometry(1, 3, 1);
   var r_hand = new THREE.Mesh(r_hand_geo,material);
-  r_hand.setMatrix(r_hand_pos_abs);
   scene.add(r_hand);
   components.push(r_hand);
+  r_hand.position.set(10,4,3);
+  //init_pos.push(r_hand_pos_abs);
 
-  var l_leg_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,-3, 0,0,1,-1, 0,0,0,1);
-  var l_leg_pos_abs = new THREE.Matrix4().multiplyMatrices(body_pos_abs,l_leg_pos); 
+ 
   var l_leg_geo = new THREE.BoxGeometry(1, 3, 1);
   var l_leg = new THREE.Mesh(l_leg_geo,material);
-  l_leg.setMatrix(l_leg_pos_abs);
   scene.add(l_leg);
   components.push(l_leg);
+  l_leg.position.set(10,1,-0.8);
+  //init_pos.push(l_leg_pos_abs);
 
-  var r_leg_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,-3, 0,0,1,1, 0,0,0,1);
-  var r_leg_pos_abs = new THREE.Matrix4().multiplyMatrices(body_pos_abs,r_leg_pos); 
+
   var r_leg_geo = new THREE.BoxGeometry(1, 3, 1);
   var r_leg = new THREE.Mesh(r_leg_geo,material);
-  r_leg.setMatrix(r_leg_pos_abs);
   scene.add(r_leg);
   components.push(r_leg);
-
+  r_leg.position.set(10,1,0.8);
+  //init_pos.push(r_leg_pos_abs);
 }
 
 var texts = [];
@@ -311,32 +303,32 @@ var text_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,22, 0,0,1,-5, 0,0,0,1);
 
 var text0_geo = new THREE. TextGeometry("START",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
 var text0 = new THREE.Mesh(text0_geo,material);
-text0.setMatrix(text_pos);
+text0.position.set(0,22,-5);
 texts.push(text0);
 
 var text1_geo = new THREE. TextGeometry("ATTACK - ATTACK",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
 var text1 = new THREE.Mesh(text1_geo,material);
-text1.setMatrix(text_pos);
 texts.push(text1);
+text1.position.set(0,22,-5);
 
 var text2_geo = new THREE. TextGeometry("ATTACK - DEFEND",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
 var text2 = new THREE.Mesh(text2_geo,material);
-text2.setMatrix(text_pos);
 texts.push(text2);
+text2.position.set(0,22,-5);
 
 var text3_geo = new THREE. TextGeometry("DEFEND - ATTACK",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
 var text3 = new THREE.Mesh(text3_geo,material);
-text3.setMatrix(text_pos);
 texts.push(text3);
+text3.position.set(0,22,-5);
 
 var text4_geo = new THREE. TextGeometry("DEFEND - DEFEND",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
 var text4 = new THREE.Mesh(text4_geo,material);
-text4.setMatrix(text_pos);
 texts.push(text4);
+text4.position.set(0,22,-5);
 
 scene.add(texts[0]);
 
-addRob1();
+//addRob1();
 addRob2();
 // SETUP UPDATE CALL-BACK
 
@@ -388,7 +380,7 @@ function updateBody() {
       // Note: Remember spacebar sets jumpcut/animate!
       
 
-      case(key == 0 && animate):
+      case(key == 2 && animate):
       var time = clock.getElapsedTime(); // t seconds passed since the clock started.
 
       if (time > time_end){
@@ -404,12 +396,7 @@ function updateBody() {
                                             0, 0, 1, 0,
                                             0,        0,         0,        1);
 
-      components [0].setMatrix(new THREE.Matrix4().multiplyMatrices(components[0].matrix,rotateZ)); 
-        components [1].setMatrix(new THREE.Matrix4().multiplyMatrices(components[1].matrix,rotateZ)); 
-          components [2].setMatrix(new THREE.Matrix4().multiplyMatrices(components[2].matrix,rotateZ)); 
-            components [3].setMatrix(new THREE.Matrix4().multiplyMatrices(components[3].matrix,rotateZ)); 
-              components [4].setMatrix(new THREE.Matrix4().multiplyMatrices(components[4].matrix,rotateZ)); 
-              components [5].setMatrix(new THREE.Matrix4().multiplyMatrices(components[5].matrix,rotateZ)); 
+
  
       break
 
@@ -419,6 +406,7 @@ function updateBody() {
       if (time > time_end){
         p = p1;
         animate = false;
+        resetBody();
         break;
       }
 
@@ -429,10 +417,11 @@ function updateBody() {
                                             0, Math.sin(-p), Math.cos(-p), 0,
                                             0,        0,         0,        1);
 
-      var torsoRotMatrix = new THREE.Matrix4().multiplyMatrices(components[0].matrix,rotateZ);
-      components [0].setMatrix(torsoRotMatrix); 
-      var torsoRotMatrix1 = new THREE.Matrix4().multiplyMatrices(components[1].matrix,rotateZ);
-      components [1].setMatrix(torsoRotMatrix1); 
+      for(var i=0;i<6;i++){
+              components[i].translateX(0.1);
+      }
+
+      
       break
 
     default:
@@ -452,6 +441,10 @@ var key = 0; // 1:11,2:12,3:21,4:22
 
 function removeText(){scene.remove(texts[key]);}
 function addText(){scene.add(texts[key]);}
+
+function resetBody(){
+
+}
 
 function takeAction(){
   switch (true){
