@@ -340,12 +340,37 @@ function updateBody() {
 
       var torsoRotMatrix = new THREE.Matrix4().multiplyMatrices(components[0].matrix,rotateZ);
       components [0].setMatrix(torsoRotMatrix); 
+      var torsoRotMatrix1 = new THREE.Matrix4().multiplyMatrices(components[1].matrix,rotateZ);
+      components [1].setMatrix(torsoRotMatrix1); 
       break
 
       // TO-DO: IMPLEMENT JUMPCUT/ANIMATION FOR EACH KEY!
       // Note: Remember spacebar sets jumpcut/animate!
       
+      case(key == "W" && animate):
+      var time = clock.getElapsedTime(); // t seconds passed since the clock started.
 
+      if (time > time_end){
+        p = p1;
+        animate = false;
+        break;
+      }
+
+      p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
+
+      var rotateZ = new THREE.Matrix4().set(1,        0,         0,        -p , 
+                                            0, 1,0, 0, 
+                                            0, 0, 1, 0,
+                                            0,        0,         0,        1);
+
+      components [0].setMatrix(new THREE.Matrix4().multiplyMatrices(components[0].matrix,rotateZ)); 
+        components [1].setMatrix(new THREE.Matrix4().multiplyMatrices(components[1].matrix,rotateZ)); 
+          components [2].setMatrix(new THREE.Matrix4().multiplyMatrices(components[2].matrix,rotateZ)); 
+            components [3].setMatrix(new THREE.Matrix4().multiplyMatrices(components[3].matrix,rotateZ)); 
+              components [4].setMatrix(new THREE.Matrix4().multiplyMatrices(components[4].matrix,rotateZ)); 
+              components [5].setMatrix(new THREE.Matrix4().multiplyMatrices(components[5].matrix,rotateZ)); 
+ 
+      break
 
     default:
       break;
@@ -368,6 +393,8 @@ keyboard.domElement.addEventListener('keydown',function(event){
   }
   else if(keyboard.eventMatches(event,"U")){ 
     (key == "U")? init_animation(p1,p0,time_length) : (init_animation(0,Math.PI/4,10), key = "U")}  
+  else if(keyboard.eventMatches(event,"W")){ 
+    (key == "W")? init_animation(p1,p0,time_length) : (init_animation(0,Math.PI/4,0.05), key = "W")} 
 
 
   // TO-DO: BIND KEYS TO YOUR JUMP CUTS AND ANIMATIONS
