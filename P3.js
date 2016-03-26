@@ -243,12 +243,14 @@ function addRob1(){
 
 var components = [];  // body, head, lhand, rhand, lleg, rleg
 var material = new THREE.MeshBasicMaterial( {color: 'green'} );
-
+var rob2_init;
 function addRob2(){
    
   var body_geo = new THREE.CylinderGeometry( 2, 2, 4, 32 );
   var body = new THREE.Mesh(body_geo,material);
+  rob2_init = new THREE.Mesh(body_geo,material);
   scene.add(body);
+
   body.position.set(10,4,0);
   components.push(body);
 
@@ -390,6 +392,13 @@ function rob1_attack(p) {
   }
 }
 
+
+var rob2_frame = 0;
+function rob2_attack(){
+  if(rob2_frame<=30){components[0].rotateZ(Math.PI/60); rob2_frame++;}
+  else{components[0].translateY(1);}
+
+}
 function updateBody() {
   switch(true)
   {
@@ -419,12 +428,27 @@ function updateBody() {
       if (time > time_end){
         p = p1;
         animate = false;
-        resetBody();
         break;
       }
 
       p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
       rob1_attack(p);
+      rob2_attack(p);
+
+      
+      break
+
+      case(key == 2 && animate):
+      var time = clock.getElapsedTime(); // t seconds passed since the clock started.
+
+      if (time > time_end){
+        p = p1;
+        animate = false;
+        break;
+      }
+
+      p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
+
 
       
       break
@@ -435,7 +459,6 @@ function updateBody() {
       if (time > time_end){
         p = p1;
         animate = false;
-        resetBody();
         break;
       }
 
@@ -450,7 +473,6 @@ function updateBody() {
       if (time > time_end){
         p = p1;
         animate = false;
-
         break;
       }
 
@@ -503,12 +525,13 @@ function removeText(){scene.remove(texts[key]);}
 function addText(){scene.add(texts[key]);}
 
 function resetBody(){
-  for(var i=0;i<6;i++){
-    components[i].rotation.z=0;}
   scene.remove(rob2_wall);
   rob2_wall.scale.y = 1;
   is_wall = 0;
   components_a[1].rotation.y = 0;
+  components[0].geometry = rob2_init.geometry;
+  components[0].position.set(10,4,0);
+  rob2_frame = 0;
 }
 
 function takeAction(){
