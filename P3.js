@@ -356,6 +356,7 @@ function rob1_defend() {
   components_a[1].rotateOnAxis(axis,-Math.PI/120);
 }
 
+
 var rob2_wall_geo = new THREE.BoxGeometry(1, 3, 5);
 var rob2_wall = new THREE.Mesh(rob2_wall_geo,material);
 rob2_wall.position.set(3,5,0);
@@ -369,21 +370,13 @@ function rob2_defend(){
 }
   var counter = 0;
 function rob1_attack(p) {
-  console.log(counter);
   if(counter<30){
     var axis = new THREE.Vector3(0,1,0);
-    var rotateY = new THREE.Matrix4().set(Math.cos(p),0, Math.sin(p),  0, 
-                                            0, 1,0,   0, 
-                                            -Math.sin(p),0, Math.cos(p),   0,
-                                            0,        0,         0,        1);
     components_a[3].rotateOnAxis(axis,Math.PI/60);
     counter++;
   }
   else if(30<=counter && counter<45){
-    var rotateY = new THREE.Matrix4().set(Math.cos(p),0, Math.sin(p),  0, 
-                                            0, 1,0,   0, 
-                                            -Math.sin(p),0, Math.cos(p),   0,
-                                            0,        0,         0,        1);
+
     components_a[10].rotateY(Math.PI/30);
     counter++;
   }
@@ -396,7 +389,9 @@ function rob1_attack(p) {
 var rob2_frame = 0;
 function rob2_attack(){
   if(rob2_frame<=30){components[0].rotateZ(Math.PI/60); rob2_frame++;}
-  else{components[0].translateY(1);}
+  else{
+    components[0].translateY(1);
+  }
 
 }
 function updateBody() {
@@ -528,13 +523,17 @@ function removeText(){scene.remove(texts[key]);}
 function addText(){scene.add(texts[key]);}
 
 function resetBody(){
-  scene.remove(rob2_wall);
-  rob2_wall.scale.y = 1;
+  counter = 0;
+  components_a[1].rotation.y=0;
+  components_a[3].rotation.y=0;
+  components_a[10].rotation.y=0;
+
   is_wall = 0;
-  components_a[1].rotation.y = 0;
-  components[0].geometry = rob2_init.geometry;
-  components[0].position.set(10,4,0);
+  scene.remove(rob2_wall);
+  rob2_wall.scale.y = 0;
   rob2_frame = 0;
+  components[0].rotation.z=0;components[2].rotation.z=0;components[3].rotation.z=0;
+  components[0].position.set(10,4,0);
 }
 
 function takeAction(){
@@ -637,6 +636,7 @@ var render = function() {
  updateBody();
  requestAnimationFrame(render);
  renderer.render(scene, camera);
+ texts[key].lookAt(camera.position);
 
 }
 
