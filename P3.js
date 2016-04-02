@@ -390,6 +390,8 @@ function rob1_attack(p) {
   else if(45<=counter && counter<60){
     components_a[3].rotateX(Math.PI/40);
   }
+  
+  
 }
 
 
@@ -632,6 +634,18 @@ function onMouseDown(event){
 
       }
 }
+
+var rayDirections = [];
+rayDirections.push(new THREE.Vector3(1, 1, 1));
+rayDirections.push(new THREE.Vector3(-1, 1, 1));
+rayDirections.push(new THREE.Vector3(1, 1, -1));
+rayDirections.push(new THREE.Vector3(-1, 1, -1));            
+rayDirections.push(new THREE.Vector3(1, -1, 1));
+rayDirections.push(new THREE.Vector3(-1, -1, 1));
+rayDirections.push(new THREE.Vector3(1, -1, -1));
+rayDirections.push(new THREE.Vector3(-1, -1, -1));  
+
+
 
 var render = function() {
  updateBody();
