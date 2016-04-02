@@ -525,8 +525,13 @@ function addText(){scene.add(texts[key]);}
 function resetBody(){
   counter = 0;
   components_a[1].rotation.y=0;
+
+  components_a[3].rotation.x=0;
   components_a[3].rotation.y=0;
-  components_a[10].rotation.y=0;
+  components_a[3].rotation.z=0;
+    components_a[10].rotation.x=0;
+    components_a[10].rotation.y=0;
+    components_a[10].rotation.z=0;
 
   is_wall = 0;
   scene.remove(rob2_wall);
@@ -547,6 +552,7 @@ function takeAction(){
        init_animation(0,Math.PI/4,1);
      break;
      case(act1==1 && act2==2):
+       resetBody();
        removeText();
        console.log("1: "+act1+" 2: "+act2);
        key=2;
@@ -554,6 +560,7 @@ function takeAction(){
        init_animation(0,Math.PI/4,1);
      break;
      case(act1==2 && act2==1):
+       resetBody();
        removeText();
        console.log("1: "+act1+" 2: "+act2);
        key=3;
