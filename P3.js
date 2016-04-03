@@ -549,24 +549,30 @@ function resetBody(){
   components[0].position.set(10,4,0);
 }
 
+var text_hp1,text_hp2;
+var hp1_ori= new THREE. TextGeometry("HP: 10",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+text_hp1 = new THREE.Mesh(hp1_ori,textmaterial);
+text_hp1.position.set(10,18,-5);
+scene.add(text_hp1);
+text_hp2 = new THREE.Mesh(hp1_ori,textmaterial);
+text_hp2.position.set(-10,18,-5);
+scene.add(text_hp2);
 function updateHP(){
-  var string1 = "HHP: "+ hp1;
-  var string2 = "HHP: "+ hp2;
-  scene.remove(text_hp1);
-  scene.remove(text_hp2);
+  var string1 = "HP1: "+ hp1;
+  var string2 = "HP2: "+ hp2;
   var new_hp1 = new THREE. TextGeometry(string1,{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
   var new_hp2 = new THREE. TextGeometry(string2,{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
-  var new_text_hp1 = new THREE.Mesh(new_hp1,textmaterial);
-  var new_text_hp2 = new THREE.Mesh(new_hp2,textmaterial);
-  //scene.add(text_hp2);
-  //scene.add(text_hp1);
+  text_hp1.geometry = new_hp1;
+  text_hp2.geometry = new_hp2;
+
+
 }
 
 function takeAction(){
   switch (true){
      case(act1==1 && act2==1):
        hp1--;hp2--;
-       //updateHP();
+       updateHP();
        resetBody();
        removeText();
        console.log("1: "+act1+" 2: "+act2);
@@ -667,7 +673,8 @@ var render = function() {
  requestAnimationFrame(render);
  renderer.render(scene, camera);
  texts[key].lookAt(camera.position);
- //console.log(JSON.stringify(components[0].position));
+ text_hp1.lookAt(camera.position);
+ text_hp2.lookAt(camera.position);
 
 }
 
