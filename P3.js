@@ -488,6 +488,7 @@ function rob1_attack(p) {
   if(counter<30){
     var axis = new THREE.Vector3(0,1,0);
     components_a[3].rotateOnAxis(axis,Math.PI/60);
+    components_a[0].translateX(0.09);
     counter++;
   }
   else if(30<=counter && counter<45){
@@ -510,6 +511,7 @@ function rob2_attack(){
 
 }
 function updateBody() {
+
   switch(true)
   {
 
@@ -551,21 +553,18 @@ function updateBody() {
 
       //*********************************************************************************
       // collision part, need to change
-      var head = components_a[11];
-      //var blade = components_a[11];
+      var head = components[0];
       var originPoint = head.position.clone();
       for (var vertexIndex = 0; vertexIndex < head.geometry.vertices.length; vertexIndex++)
       {   
         var localVertex = head.geometry.vertices[vertexIndex].clone();
-        var globalVertex = localVertex.applyMatrix4( head.matrix );
+        var globalVertex = localVertex.applyMatrix4( head.matrix);    
         var directionVector = globalVertex.sub( head.position );
     
         var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
-        var collisionResults = ray.intersectObjects( components );
+        var collisionResults = ray.intersectObjects( components_a );
           if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
-              console.log(" hit ");
-              animate = false;
-              break;
+              animate = false;  console.log("!!");        
             }
       } 
       //*******************************************************************************************
@@ -583,6 +582,21 @@ function updateBody() {
       }
 
       p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
+
+      var head = rob2_wall;
+      var originPoint = head.position.clone();
+      for (var vertexIndex = 0; vertexIndex < head.geometry.vertices.length; vertexIndex++)
+      {   
+        var localVertex = head.geometry.vertices[vertexIndex].clone();
+        var globalVertex = localVertex.applyMatrix4( head.matrix);    
+        var directionVector = globalVertex.sub( head.position );
+    
+        var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
+        var collisionResults = ray.intersectObjects( components_a );
+          if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
+              animate = false;  console.log("!!");        
+            }
+      } 
       
       rob1_attack();
       rob2_defend();
@@ -665,8 +679,10 @@ function removeText(){scene.remove(texts[key]);}
 function addText(){scene.add(texts[key]);}
 
 function resetBody(){
+
   counter = 0;
   components_a[1].rotation.y=0;
+  components_a[0].position.set(-10,7,0);
 
   components_a[3].rotation.x=0;
   components_a[3].rotation.y=0;
@@ -674,6 +690,8 @@ function resetBody(){
   components_a[10].rotation.x=0;
   components_a[10].rotation.y=0;
   components_a[10].rotation.z=0;
+  
+
 
   is_wall = 0;
   scene.remove(rob2_wall);
@@ -681,6 +699,11 @@ function resetBody(){
   rob2_frame = 0;
   components[0].rotation.z=0;components[2].rotation.z=0;components[3].rotation.z=0;
   components[0].position.set(10,4,0);
+
+  components[0].updateMatrix();  
+  rob2_wall.updateMatrix();
+
+
 }
 
 var text_hp1,text_hp2;
