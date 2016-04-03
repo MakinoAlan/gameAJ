@@ -113,7 +113,7 @@ function loadOBJ(file, material, scale, xOff, yOff, zOff, xRot, yRot, zRot) {
 // CREATE SPHERES
 
 function makeCube() {
-  var unitCube = new THREE.BoxGeometry(1,1,1);
+  var unitCube = new THREE.BoxGeometry(1,1,1,1,1,1);
   return unitCube;
 }
 
@@ -381,10 +381,8 @@ function rob1_attack(p) {
     counter++;
   }
   else if(45<=counter && counter<60){
-    components_a[3].rotateX(Math.PI/40);
-  }
-  
-  
+    components_a[3].rotateX(Math.PI/20);
+  } 
 }
 
 
@@ -392,7 +390,7 @@ var rob2_frame = 0;
 function rob2_attack(){
   if(rob2_frame<=30){components[0].rotateZ(Math.PI/60); rob2_frame++;}
   else{
-    components[0].translateY(1);
+    components[0].translateY(0.6);
   }
 
 }
@@ -431,7 +429,23 @@ function updateBody() {
       p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
       rob1_attack(p);
       rob2_attack(p);
-
+      var head = components_a[11];
+      //var blade = components_a[11];
+      var originPoint = head.position.clone();
+      for (var vertexIndex = 0; vertexIndex < head.geometry.vertices.length; vertexIndex++)
+      {   
+        var localVertex = head.geometry.vertices[vertexIndex].clone();
+        var globalVertex = localVertex.applyMatrix4( head.matrix );
+        var directionVector = globalVertex.sub( head.position );
+    
+        var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
+        var collisionResults = ray.intersectObjects( components );
+          if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
+              console.log(" hit ");
+              animate = false;
+              break;
+            }
+      } 
       
       break
 
@@ -658,6 +672,8 @@ var render = function() {
  requestAnimationFrame(render);
  renderer.render(scene, camera);
  texts[key].lookAt(camera.position);
+ console.log(components_a[11].position.x);
+ console.log(components_a[11].position.y);
 
 }
 
