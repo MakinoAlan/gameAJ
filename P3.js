@@ -25,6 +25,19 @@ scene.add(camera);
 var controls = new THREE.OrbitControls(camera);
 controls.damping = 0.2;
 
+// LIGHTING UNIFORMS
+var lightColor = new THREE.Color(1,1,1);
+var ambientColor = new THREE.Color(0.4,0.4,0.4);
+var lightPosition = new THREE.Vector3(70,100,70);
+
+var kAmbient = 0.4;
+var kDiffuse = 0.8;
+var kSpecular = 0.8;
+var shininess = 10.0;
+var ctw_c = new THREE.Color(0.0,0.1,0.7);
+var ctw_w = new THREE.Color(0.6,0.1,0.0); 
+
+
 // ADAPT TO WINDOW RESIZE
 function resize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -43,72 +56,57 @@ var defaultMaterial = new THREE.MeshLambertMaterial();
 
 //var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
 
+/*
 var floorGeometry = new THREE.PlaneBufferGeometry(30, 30);
-var floorMaterial = new THREE.MeshBasicMaterial( {side: THREE.DoubleSide, color: 'red'} );
+var floortexture = THREE.ImageUtils.loadTexture( 'texture/iron.jpg' );
+var floorMaterial = new THREE.MeshBasicMaterial( { map: floortexture } );
+var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+floor.position.y = -0.1;
+floor.rotation.x = Math.PI / 2;
+scene.add(floor);
+*/
+
+var floorTexture = new THREE.ImageUtils.loadTexture('texture/ground.jpg');
+//floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+//floorTexture.repeat.set(4, 4);
+
+var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
+var floorGeometry = new THREE.PlaneBufferGeometry(100, 100);
 var floor = new THREE.Mesh(floorGeometry, floorMaterial);
 floor.position.y = -0.1;
 floor.rotation.x = Math.PI / 2;
 scene.add(floor);
 
-// LIGHTING UNIFORMS
-var lightColor = new THREE.Color(1,1,1);
-var ambientColor = new THREE.Color(0.4,0.4,0.4);
-var lightPosition = new THREE.Vector3(70,100,70);
+var imagePrefix = "texture/universe";
+var directions  = ["1", "2", "3", "4", "5", "6"];
+var imageSuffix = ".jpg";
+var skyGeometry = new THREE.CubeGeometry( 5000, 5000, 5000 ); 
+var materialArray = [];
+for (var i = 0; i < 6; i++)
+  materialArray.push( new THREE.MeshBasicMaterial({
+    map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+    side: THREE.BackSide
+  }));
+var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+scene.add( skyBox );
 
-// MATERIALS
-var armadilloMaterial = new THREE.ShaderMaterial({
-   uniforms: {
-     lightColor : {type : 'c', value: lightColor},
-     ambientColor : {type : 'c', value: ambientColor},
-     lightPosition : {type: 'v3', value: lightPosition},
-   },
-});
+// set barrel
+var cone_geo = new THREE.CylinderGeometry(0, 5, 15, 4, 1, true);
+var cone1 = new THREE.Mesh(cone_geo,defaultMaterial);
+cone1.position.set(45,7.5,-45);
+scene.add(cone1);
+var cone2 = new THREE.Mesh(cone_geo,defaultMaterial);
+cone2.position.set(-45,7.5,-45);
+scene.add(cone2);
+var cone3 = new THREE.Mesh(cone_geo,defaultMaterial);
+cone3.position.set(-45,7.5,45);
+scene.add(cone3);
+var cone4 = new THREE.Mesh(cone_geo,defaultMaterial);
+cone4.position.set(45,7.5,45);
+scene.add(cone4);
 
-// LOAD SHADERS
-var shaderFiles = [
-  'glsl/example.vs.glsl',
-  'glsl/example.fs.glsl',
-];
 
-new THREE.SourceLoader().load(shaderFiles, function(shaders) {
-  armadilloMaterial.vertexShader = shaders['glsl/example.vs.glsl'];
-  armadilloMaterial.fragmentShader = shaders['glsl/example.fs.glsl'];
-  armadilloMaterial.needsUpdate = true;
-})
-
-// LOAD ARMADILLO
-function loadOBJ(file, material, scale, xOff, yOff, zOff, xRot, yRot, zRot) {
-  var onProgress = function(query) {
-    if ( query.lengthComputable ) {
-      var percentComplete = query.loaded / query.total * 100;
-      console.log( Math.round(percentComplete, 2) + '% downloaded' );
-    }
-  };
-
-  var onError = function() {
-    console.log('Failed to load ' + file);
-  };
-
-  var loader = new THREE.OBJLoader()
-  loader.load(file, function(object) {
-    object.traverse(function(child) {
-      if (child instanceof THREE.Mesh) {
-        child.material = material;
-      }
-    });
-
-    object.position.set(xOff,yOff,zOff);
-    object.rotation.x= xRot;
-    object.rotation.y = yRot;
-    object.rotation.z = zRot;
-    object.scale.set(scale,scale,scale);
-    object.parent = floor;
-    scene.add(object);
-
-  }, onProgress, onError);
-}
-
-// loadOBJ('obj/armadillo.obj', armadilloMaterial, 3, 0,3,-2, 0,Math.PI,0);
 
 // CREATE SPHERES
 
@@ -121,6 +119,12 @@ function makeCube() {
 
 var components_a = [];
 var material_a = new THREE.MeshBasicMaterial( {color: 'black'});
+var bottexture = THREE.ImageUtils.loadTexture( 'texture/iron.jpg' );
+var botMaterial = new THREE.MeshBasicMaterial( 
+{
+  map: bottexture
+} );
+
 
 // Alan
 function addRob1(){
@@ -131,14 +135,14 @@ function addRob1(){
   var torsoGeometry = makeCube();
   var torso_scale = new THREE.Matrix4().set(3,0,0,0, 0,7,0,0, 0,0,3,0, 0,0,0,1);
   torsoGeometry.applyMatrix(torso_scale);
-  var torso = new THREE.Mesh(torsoGeometry,material_a);
+  var torso = new THREE.Mesh(torsoGeometry,botMaterial);
   torso.position.set(-10,7,0);
   //scene.add(torso);
   components_a.push(torso);
  
   //1
   var ball1_Geometry = new THREE.SphereGeometry(0.5,35,35);
-  var ball1 = new THREE.Mesh(ball1_Geometry,material_a);
+  var ball1 = new THREE.Mesh(ball1_Geometry,botMaterial);
   ball1.position.set(0,1,-1.2);
   //torso.add(ball1);
   components_a.push(ball1);
@@ -147,14 +151,14 @@ function addRob1(){
   var arm_left_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,5,0, 0,0,0,1);
   var arm_leftGeometry = makeCube();
   arm_leftGeometry.applyMatrix(arm_left_scale);
-  var arm_left = new THREE.Mesh(arm_leftGeometry,material_a);
+  var arm_left = new THREE.Mesh(arm_leftGeometry,botMaterial);
   arm_left.position.set(0,0,-2.5);
   //ball1.add(arm_left);
   components_a.push(arm_left);
 
   //3
   var ball2_Geometry = new THREE.SphereGeometry(0.5,35,35);
-  var ball2 = new THREE.Mesh(ball2_Geometry,material_a);
+  var ball2 = new THREE.Mesh(ball2_Geometry,botMaterial);
   ball2.position.set(0,1,1.2);
   //torso.add(ball2);
   components_a.push(ball2);
@@ -163,7 +167,7 @@ function addRob1(){
   var arm_right_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,5,0, 0,0,0,1);
   var arm_rightGeometry = makeCube();
   arm_rightGeometry.applyMatrix(arm_right_scale);
-  var arm_right = new THREE.Mesh(arm_rightGeometry,material_a);
+  var arm_right = new THREE.Mesh(arm_rightGeometry,botMaterial);
   arm_right.position.set(0,0,2.5);
   //ball2.add(arm_right);
   components_a.push(arm_right);
@@ -172,7 +176,7 @@ function addRob1(){
   var leg_left_scale = new THREE.Matrix4().set(1,0,0,0, 0,4,0,0, 0,0,1,0, 0,0,0,1);
   var leg_left_Geometry = makeCube();
   leg_left_Geometry.applyMatrix(leg_left_scale);
-  var leg_left = new THREE.Mesh(leg_left_Geometry,material_a);
+  var leg_left = new THREE.Mesh(leg_left_Geometry,botMaterial);
   leg_left.position.set(0,-5,1);
   //torso.add(leg_left);
   components_a.push(leg_left);
@@ -181,7 +185,7 @@ function addRob1(){
   var leg_right_scale = new THREE.Matrix4().set(1,0,0,0, 0,4,0,0, 0,0,1,0, 0,0,0,1);
   var leg_right_Geometry = makeCube();
   leg_right_Geometry.applyMatrix(leg_right_scale);
-  var leg_right = new THREE.Mesh(leg_right_Geometry,material_a);
+  var leg_right = new THREE.Mesh(leg_right_Geometry,botMaterial);
   leg_right.position.set(0,-5,-1);
   //torso.add(leg_right);
   components_a.push(leg_right);
@@ -192,7 +196,7 @@ function addRob1(){
   var neck_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
   var neck_Geometry = new THREE.CylinderGeometry(0.6,0.6,0.6,50);
   neck_Geometry.applyMatrix(neck_scale);
-  var neck = new THREE.Mesh(neck_Geometry,material_a);
+  var neck = new THREE.Mesh(neck_Geometry,botMaterial);
   neck.position.set(0,3.8,0);
   //torso.add(neck);
   components_a.push(neck);
@@ -201,7 +205,7 @@ function addRob1(){
   var head_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
   var head_Geometry = new THREE.SphereGeometry(1.5, 35, 35);
   head_Geometry.applyMatrix(head_scale);
-  var head = new THREE.Mesh(head_Geometry,material_a);
+  var head = new THREE.Mesh(head_Geometry,botMaterial);
   head.position.set(0,1.6,0);
   //neck.add(head);
   components_a.push(head);
@@ -210,7 +214,7 @@ function addRob1(){
   var hilt_scale = new THREE.Matrix4().set(0.7,0,0,0, 0,1.3,0,0, 0,0,0.5,0, 0,0,0,1);
   var hilt_Geometry = new makeCube();
   hilt_Geometry.applyMatrix(hilt_scale);
-  var hilt = new THREE.Mesh(hilt_Geometry,material_a);
+  var hilt = new THREE.Mesh(hilt_Geometry,botMaterial);
   hilt.position.set(0,1,2);
   //arm_right.add(hilt);
   components_a.push(hilt);
@@ -219,7 +223,7 @@ function addRob1(){
   var hilt1_scale = new THREE.Matrix4().set(1.5,0,0,0, 0,0.7,0,0, 0,0,0.6,0, 0,0,0,1);
   var hilt1_Geometry = new THREE.CylinderGeometry(1,1,0.2,50);
   hilt1_Geometry.applyMatrix(hilt1_scale);
-  var hilt1 = new THREE.Mesh(hilt1_Geometry,material_a);
+  var hilt1 = new THREE.Mesh(hilt1_Geometry,botMaterial);
   hilt1.position.set(0,0.6,0);
   //hilt.add(hilt1);
   components_a.push(hilt1);
@@ -228,7 +232,7 @@ function addRob1(){
   var blade_scale = new THREE.Matrix4().set(0.8,0,0,0, 0,1.5,0,0, 0,0,0.2,0, 0,0,0,1);
   var blade_Geometry = new THREE.CylinderGeometry(1,1,5,50);
   blade_Geometry.applyMatrix(blade_scale);
-  var blade = new THREE.Mesh(blade_Geometry,material_a);
+  var blade = new THREE.Mesh(blade_Geometry,botMaterial);
   blade.position.set(0,4,0);
   //hilt1.add(blade);
   components_a.push(blade);
@@ -237,7 +241,7 @@ function addRob1(){
   var sheild_scale = new THREE.Matrix4().set(5,0,0,0, 0,6,0,0, 0,0,0.3,0, 0,0,0,1);
   var sheild_Geometry = makeCube();
   sheild_Geometry.applyMatrix(sheild_scale);
-  var sheild = new THREE.Mesh(sheild_Geometry,material_a);
+  var sheild = new THREE.Mesh(sheild_Geometry,botMaterial);
   sheild.position.set(0,0,-2.5);
   //arm_left.add(sheild);
   components_a.push(sheild)
@@ -251,13 +255,17 @@ function addRob1(){
 // Jack
 
 var components = [];  // body, head, lhand, rhand, lleg, rleg
-var material = new THREE.MeshBasicMaterial( {color: 'green'} );
+var bot2texture = THREE.ImageUtils.loadTexture( 'texture/green.jpg' );
+var bot2Material = new THREE.MeshBasicMaterial( { map: bot2texture } );
+var firetexture = THREE.ImageUtils.loadTexture( 'texture/fire.jpg' );
+var fireMaterial = new THREE.MeshBasicMaterial( { map: firetexture } );
+//var material = new THREE.MeshBasicMaterial( {color: 'green'} );
 var rob2_init;
 function addRob2(){
    
   var body_geo = new THREE.CylinderGeometry( 2, 2, 4, 32 );
-  var body = new THREE.Mesh(body_geo,material);
-  rob2_init = new THREE.Mesh(body_geo,material);
+  var body = new THREE.Mesh(body_geo,bot2Material);
+  rob2_init = new THREE.Mesh(body_geo,bot2Material);
   //scene.add(body);
 
   body.position.set(10,4,0);
@@ -265,7 +273,7 @@ function addRob2(){
 
 
   var head_geo = new THREE.DodecahedronGeometry(1, 0);
-  var head = new THREE.Mesh(head_geo,material);
+  var head = new THREE.Mesh(head_geo,bot2Material);
   //body.add(head);
   components.push(head);
   head.position.set(0,3.5,0);
@@ -273,28 +281,28 @@ function addRob2(){
 
 
   var l_hand_geo = new THREE.BoxGeometry(1, 3, 1);
-  var l_hand = new THREE.Mesh(l_hand_geo,material);
+  var l_hand = new THREE.Mesh(l_hand_geo,bot2Material);
   //body.add(l_hand);
   components.push(l_hand);
   l_hand.position.set(0,0,-3);
 
 
   var r_hand_geo = new THREE.BoxGeometry(1, 3, 1);
-  var r_hand = new THREE.Mesh(r_hand_geo,material);
+  var r_hand = new THREE.Mesh(r_hand_geo,bot2Material);
   //body.add(r_hand);
   components.push(r_hand);
   r_hand.position.set(0,0,3);
 
  
   var l_leg_geo = new THREE.BoxGeometry(1, 3, 1);
-  var l_leg = new THREE.Mesh(l_leg_geo,material);
+  var l_leg = new THREE.Mesh(l_leg_geo,bot2Material);
   //body.add(l_leg);
   components.push(l_leg);
   l_leg.position.set(0,-3,-0.8);
 
 
   var r_leg_geo = new THREE.BoxGeometry(1, 3, 1);
-  var r_leg = new THREE.Mesh(r_leg_geo,material);
+  var r_leg = new THREE.Mesh(r_leg_geo,bot2Material);
   //body.add(r_leg);
   components.push(r_leg);
   //r_leg.position.set(10,1,0.8);
@@ -305,7 +313,84 @@ function addRob2(){
 
 
 var texts = [];
-var textmaterial = new THREE.MeshNormalMaterial();
+var gouraudMaterial = new THREE.ShaderMaterial({
+   uniforms: {
+     lightColor : {type : 'c', value: lightColor},
+     ambientColor : {type : 'c', value: ambientColor},
+     lightPosition : {type: 'v3', value: lightPosition},
+     kAmbient : {type:'f', value: kAmbient},
+     kDiffuse: {type:'f', value: kDiffuse},
+     kSpecular: {type:'f', value: kSpecular},
+     shininess: {type:'f', value: shininess}
+   },
+});
+var textmaterial = new THREE.ShaderMaterial({
+   uniforms: {
+     lightColor : {type : 'c', value: lightColor},
+     ambientColor : {type : 'c', value: ambientColor},
+     lightPosition : {type: 'v3', value: lightPosition},
+     kAmbient : {type:'f', value: kAmbient},
+     kDiffuse: {type:'f', value: kDiffuse},
+     kSpecular: {type:'f', value: kSpecular},
+     shininess: {type:'f', value: shininess}
+   },
+});
+var shaderFiles = [
+  'glsl/example.vs.glsl',
+  'glsl/example.fs.glsl',
+  'glsl/gouraud.vs.glsl',
+  'glsl/gouraud.fs.glsl', 
+  'glsl/phong.vs.glsl',
+  'glsl/phong.fs.glsl',
+  'glsl/blinn.vs.glsl',
+  'glsl/blinn.fs.glsl',
+  'glsl/ctw.vs.glsl',
+  'glsl/ctw.fs.glsl',
+  'glsl/gouraud_a.vs.glsl',
+  'glsl/gouraud_a.fs.glsl',
+  'glsl/phong_a.vs.glsl',
+  'glsl/phong_a.fs.glsl',
+  'glsl/blinn_a.vs.glsl',
+  'glsl/blinn_a.fs.glsl',
+  'glsl/ctw_a.vs.glsl',
+  'glsl/ctw_a.fs.glsl',
+];
+new THREE.SourceLoader().load(shaderFiles, function(shaders) {
+  textmaterial.vertexShader = shaders['glsl/phong.vs.glsl'];
+  textmaterial.fragmentShader = shaders['glsl/phong.fs.glsl'];
+  textmaterial.needsUpdate = true;
+
+  gouraudMaterial.vertexShader = shaders['glsl/gouraud.vs.glsl'];
+  gouraudMaterial.fragmentShader = shaders['glsl/gouraud.fs.glsl'];
+  gouraudMaterial.needsUpdate = true;
+  })
+var keyboardtext = new THREEx.KeyboardState();
+function onKeyDown(event)
+{
+ if(keyboardtext.eventMatches(event,"m"))
+  {
+    alert("Gouraud Shading");
+    textmaterial.vertexShader = gouraudMaterial.vertexShader;
+    textmaterial.fragmentShader = gouraudMaterial.fragmentShader;
+    textmaterial.needsUpdate = true;
+  }
+  else if(keyboardtext.eventMatches(event,"i"))
+  {
+    alert("Phong Shading");
+    textmaterial.vertexShader = phong_a_Material.vertexShader;
+    textmaterial.fragmentShader = phong_a_Material.fragmentShader;
+    textmaterial.needsUpdate = true;
+  }
+  else if(keyboardtext.eventMatches(event,"o"))
+  {
+    alert("Blinn Shading");
+    textmaterial.vertexShader = blinn_a_Material.vertexShader;
+    textmaterial.fragmentShader = blinn_a_Material.fragmentShader;
+    textmaterial.needsUpdate = true;
+  }
+  else{
+  }  
+};
 var text_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,22, 0,0,1,-5, 0,0,0,1);
 var text0_geo = new THREE. TextGeometry("START",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
 var text0 = new THREE.Mesh(text0_geo,textmaterial);
@@ -328,6 +413,7 @@ var text4 = new THREE.Mesh(text4_geo,textmaterial);
 texts.push(text4);
 text4.position.set(0,22,-5);
 scene.add(texts[0]);
+keyboardtext.domElement.addEventListener('keydown', onKeyDown );
 
 
 
@@ -387,7 +473,7 @@ function rob1_defend() {
 
 
 var rob2_wall_geo = new THREE.BoxGeometry(1, 3, 5);
-var rob2_wall = new THREE.Mesh(rob2_wall_geo,material);
+var rob2_wall = new THREE.Mesh(rob2_wall_geo,fireMaterial);
 rob2_wall.position.set(3,5,0);
 var is_wall = 0;
 
