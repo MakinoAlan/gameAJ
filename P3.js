@@ -249,7 +249,7 @@ function addRob2(){
   var body_geo = new THREE.CylinderGeometry( 2, 2, 4, 32 );
   var body = new THREE.Mesh(body_geo,material);
   rob2_init = new THREE.Mesh(body_geo,material);
-  scene.add(body);
+  //scene.add(body);
 
   body.position.set(10,4,0);
   components.push(body);
@@ -257,7 +257,7 @@ function addRob2(){
 
   var head_geo = new THREE.DodecahedronGeometry(1, 0);
   var head = new THREE.Mesh(head_geo,material);
-  body.add(head);
+  //body.add(head);
   components.push(head);
   head.position.set(0,3.5,0);
 
@@ -265,28 +265,28 @@ function addRob2(){
 
   var l_hand_geo = new THREE.BoxGeometry(1, 3, 1);
   var l_hand = new THREE.Mesh(l_hand_geo,material);
-  body.add(l_hand);
+  //body.add(l_hand);
   components.push(l_hand);
   l_hand.position.set(0,0,-3);
 
 
   var r_hand_geo = new THREE.BoxGeometry(1, 3, 1);
   var r_hand = new THREE.Mesh(r_hand_geo,material);
-  body.add(r_hand);
+  //body.add(r_hand);
   components.push(r_hand);
   r_hand.position.set(0,0,3);
 
  
   var l_leg_geo = new THREE.BoxGeometry(1, 3, 1);
   var l_leg = new THREE.Mesh(l_leg_geo,material);
-  body.add(l_leg);
+  //body.add(l_leg);
   components.push(l_leg);
   l_leg.position.set(0,-3,-0.8);
 
 
   var r_leg_geo = new THREE.BoxGeometry(1, 3, 1);
   var r_leg = new THREE.Mesh(r_leg_geo,material);
-  body.add(r_leg);
+  //body.add(r_leg);
   components.push(r_leg);
   //r_leg.position.set(10,1,0.8);
   r_leg.position.set(0,-3,0.8);
@@ -294,8 +294,8 @@ function addRob2(){
 
 
 
-var texts = [];
 
+var texts = [];
 var textmaterial = new THREE.MeshNormalMaterial();
 var text_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,22, 0,0,1,-5, 0,0,0,1);
 var text0_geo = new THREE. TextGeometry("START",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
@@ -321,8 +321,14 @@ text4.position.set(0,22,-5);
 scene.add(texts[0]);
 
 
+
 addRob1();
 addRob2();
+scene.add(components[0]);
+for(i=1;i<6;i++){
+  components[0].add(components[i]);
+}
+
 // SETUP UPDATE CALL-BACK
 
 var clock = new THREE.Clock(true);
@@ -510,14 +516,16 @@ function updateBody() {
 }
 //testMove();
 
-var hp1 = 100;
-var hp2 = 100;
+var hp1 = 10;
+var hp2 = 10;
 var mp1 = 0;
 var mp2 = 0;
 var act1 = 0;
 var act2 = 0;
 var turn = 0;
 var key = 0; // 1:11,2:12,3:21,4:22
+
+
 
 function removeText(){scene.remove(texts[key]);}
 function addText(){scene.add(texts[key]);}
@@ -529,9 +537,9 @@ function resetBody(){
   components_a[3].rotation.x=0;
   components_a[3].rotation.y=0;
   components_a[3].rotation.z=0;
-    components_a[10].rotation.x=0;
-    components_a[10].rotation.y=0;
-    components_a[10].rotation.z=0;
+  components_a[10].rotation.x=0;
+  components_a[10].rotation.y=0;
+  components_a[10].rotation.z=0;
 
   is_wall = 0;
   scene.remove(rob2_wall);
@@ -541,9 +549,24 @@ function resetBody(){
   components[0].position.set(10,4,0);
 }
 
+function updateHP(){
+  var string1 = "HHP: "+ hp1;
+  var string2 = "HHP: "+ hp2;
+  scene.remove(text_hp1);
+  scene.remove(text_hp2);
+  var new_hp1 = new THREE. TextGeometry(string1,{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+  var new_hp2 = new THREE. TextGeometry(string2,{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+  var new_text_hp1 = new THREE.Mesh(new_hp1,textmaterial);
+  var new_text_hp2 = new THREE.Mesh(new_hp2,textmaterial);
+  //scene.add(text_hp2);
+  //scene.add(text_hp1);
+}
+
 function takeAction(){
   switch (true){
      case(act1==1 && act2==1):
+       hp1--;hp2--;
+       //updateHP();
        resetBody();
        removeText();
        console.log("1: "+act1+" 2: "+act2);
@@ -644,6 +667,7 @@ var render = function() {
  requestAnimationFrame(render);
  renderer.render(scene, camera);
  texts[key].lookAt(camera.position);
+ //console.log(JSON.stringify(components[0].position));
 
 }
 
