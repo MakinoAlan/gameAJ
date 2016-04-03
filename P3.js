@@ -471,7 +471,9 @@ function updateBody() {
       for (var vertexIndex = 0; vertexIndex < head.geometry.vertices.length; vertexIndex++)
       {   
         var localVertex = head.geometry.vertices[vertexIndex].clone();
-        var globalVertex = localVertex.applyMatrix4( head.matrix );
+        var globalVertex = localVertex.applyMatrix4( head.matrixWorld);
+
+        
         var directionVector = globalVertex.sub( head.position );
     
         var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
