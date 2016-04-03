@@ -127,110 +127,119 @@ function addRob1(){
   // set the general material
   //var normalMaterial = new THREE.MeshNormalMaterial( {color: 'red'});
   
-  // set the torso of the character
+  // set the torso of the character 0
   var torsoGeometry = makeCube();
   var torso_scale = new THREE.Matrix4().set(3,0,0,0, 0,7,0,0, 0,0,3,0, 0,0,0,1);
   torsoGeometry.applyMatrix(torso_scale);
   var torso = new THREE.Mesh(torsoGeometry,material_a);
   torso.position.set(-10,7,0);
-  scene.add(torso);
+  //scene.add(torso);
   components_a.push(torso);
-
+ 
+  //1
   var ball1_Geometry = new THREE.SphereGeometry(0.5,35,35);
   var ball1 = new THREE.Mesh(ball1_Geometry,material_a);
   ball1.position.set(0,1,-1.2);
-  torso.add(ball1);
+  //torso.add(ball1);
   components_a.push(ball1);
   
-  // set arms and leg for the character
+  // set arms and leg for the character 2
   var arm_left_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,5,0, 0,0,0,1);
   var arm_leftGeometry = makeCube();
   arm_leftGeometry.applyMatrix(arm_left_scale);
   var arm_left = new THREE.Mesh(arm_leftGeometry,material_a);
   arm_left.position.set(0,0,-2.5);
-  ball1.add(arm_left);
+  //ball1.add(arm_left);
   components_a.push(arm_left);
 
+  //3
   var ball2_Geometry = new THREE.SphereGeometry(0.5,35,35);
   var ball2 = new THREE.Mesh(ball2_Geometry,material_a);
   ball2.position.set(0,1,1.2);
-  torso.add(ball2);
+  //torso.add(ball2);
   components_a.push(ball2);
   
+  //4
   var arm_right_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,5,0, 0,0,0,1);
   var arm_rightGeometry = makeCube();
   arm_rightGeometry.applyMatrix(arm_right_scale);
   var arm_right = new THREE.Mesh(arm_rightGeometry,material_a);
   arm_right.position.set(0,0,2.5);
-  ball2.add(arm_right);
+  //ball2.add(arm_right);
   components_a.push(arm_right);
   
+  //5
   var leg_left_scale = new THREE.Matrix4().set(1,0,0,0, 0,4,0,0, 0,0,1,0, 0,0,0,1);
   var leg_left_Geometry = makeCube();
   leg_left_Geometry.applyMatrix(leg_left_scale);
   var leg_left = new THREE.Mesh(leg_left_Geometry,material_a);
   leg_left.position.set(0,-5,1);
-  torso.add(leg_left);
+  //torso.add(leg_left);
   components_a.push(leg_left);
   
+  //6
   var leg_right_scale = new THREE.Matrix4().set(1,0,0,0, 0,4,0,0, 0,0,1,0, 0,0,0,1);
   var leg_right_Geometry = makeCube();
   leg_right_Geometry.applyMatrix(leg_right_scale);
   var leg_right = new THREE.Mesh(leg_right_Geometry,material_a);
   leg_right.position.set(0,-5,-1);
-  torso.add(leg_right);
+  //torso.add(leg_right);
   components_a.push(leg_right);
 
   
   
-  // set neck and head for the character
+  // set neck and head for the character 7
   var neck_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
   var neck_Geometry = new THREE.CylinderGeometry(0.6,0.6,0.6,50);
   neck_Geometry.applyMatrix(neck_scale);
   var neck = new THREE.Mesh(neck_Geometry,material_a);
   neck.position.set(0,3.8,0);
-  torso.add(neck);
+  //torso.add(neck);
   components_a.push(neck);
   
+  //8
   var head_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
   var head_Geometry = new THREE.SphereGeometry(1.5, 35, 35);
   head_Geometry.applyMatrix(head_scale);
   var head = new THREE.Mesh(head_Geometry,material_a);
   head.position.set(0,1.6,0);
-  neck.add(head);
+  //neck.add(head);
   components_a.push(head);
   
-  // draw the sword and sheild
+  // draw the sword and sheild 9
   var hilt_scale = new THREE.Matrix4().set(0.7,0,0,0, 0,1.3,0,0, 0,0,0.5,0, 0,0,0,1);
   var hilt_Geometry = new makeCube();
   hilt_Geometry.applyMatrix(hilt_scale);
   var hilt = new THREE.Mesh(hilt_Geometry,material_a);
   hilt.position.set(0,1,2);
-  arm_right.add(hilt);
+  //arm_right.add(hilt);
   components_a.push(hilt);
-
+  
+  //10
   var hilt1_scale = new THREE.Matrix4().set(1.5,0,0,0, 0,0.7,0,0, 0,0,0.6,0, 0,0,0,1);
   var hilt1_Geometry = new THREE.CylinderGeometry(1,1,0.2,50);
   hilt1_Geometry.applyMatrix(hilt1_scale);
   var hilt1 = new THREE.Mesh(hilt1_Geometry,material_a);
   hilt1.position.set(0,0.6,0);
-  hilt.add(hilt1);
+  //hilt.add(hilt1);
   components_a.push(hilt1);
-
+  
+  //11
   var blade_scale = new THREE.Matrix4().set(0.8,0,0,0, 0,1.5,0,0, 0,0,0.2,0, 0,0,0,1);
   var blade_Geometry = new THREE.CylinderGeometry(1,1,5,50);
   blade_Geometry.applyMatrix(blade_scale);
   var blade = new THREE.Mesh(blade_Geometry,material_a);
   blade.position.set(0,4,0);
-  hilt1.add(blade);
+  //hilt1.add(blade);
   components_a.push(blade);
 
+  //12
   var sheild_scale = new THREE.Matrix4().set(5,0,0,0, 0,6,0,0, 0,0,0.3,0, 0,0,0,1);
   var sheild_Geometry = makeCube();
   sheild_Geometry.applyMatrix(sheild_scale);
   var sheild = new THREE.Mesh(sheild_Geometry,material_a);
   sheild.position.set(0,0,-2.5);
-  arm_left.add(sheild);
+  //arm_left.add(sheild);
   components_a.push(sheild)
 
 
@@ -249,7 +258,7 @@ function addRob2(){
   var body_geo = new THREE.CylinderGeometry( 2, 2, 4, 32 );
   var body = new THREE.Mesh(body_geo,material);
   rob2_init = new THREE.Mesh(body_geo,material);
-  scene.add(body);
+  //scene.add(body);
 
   body.position.set(10,4,0);
   components.push(body);
@@ -257,7 +266,7 @@ function addRob2(){
 
   var head_geo = new THREE.DodecahedronGeometry(1, 0);
   var head = new THREE.Mesh(head_geo,material);
-  body.add(head);
+  //body.add(head);
   components.push(head);
   head.position.set(0,3.5,0);
 
@@ -265,28 +274,28 @@ function addRob2(){
 
   var l_hand_geo = new THREE.BoxGeometry(1, 3, 1);
   var l_hand = new THREE.Mesh(l_hand_geo,material);
-  body.add(l_hand);
+  //body.add(l_hand);
   components.push(l_hand);
   l_hand.position.set(0,0,-3);
 
 
   var r_hand_geo = new THREE.BoxGeometry(1, 3, 1);
   var r_hand = new THREE.Mesh(r_hand_geo,material);
-  body.add(r_hand);
+  //body.add(r_hand);
   components.push(r_hand);
   r_hand.position.set(0,0,3);
 
  
   var l_leg_geo = new THREE.BoxGeometry(1, 3, 1);
   var l_leg = new THREE.Mesh(l_leg_geo,material);
-  body.add(l_leg);
+  //body.add(l_leg);
   components.push(l_leg);
   l_leg.position.set(0,-3,-0.8);
 
 
   var r_leg_geo = new THREE.BoxGeometry(1, 3, 1);
   var r_leg = new THREE.Mesh(r_leg_geo,material);
-  body.add(r_leg);
+  //body.add(r_leg);
   components.push(r_leg);
   //r_leg.position.set(10,1,0.8);
   r_leg.position.set(0,-3,0.8);
@@ -294,8 +303,8 @@ function addRob2(){
 
 
 
-var texts = [];
 
+var texts = [];
 var textmaterial = new THREE.MeshNormalMaterial();
 var text_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,22, 0,0,1,-5, 0,0,0,1);
 var text0_geo = new THREE. TextGeometry("START",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
@@ -321,8 +330,28 @@ text4.position.set(0,22,-5);
 scene.add(texts[0]);
 
 
+
 addRob1();
 addRob2();
+scene.add(components_a[0]);
+components_a[0].add(components_a[1]);
+components_a[1].add(components_a[2]);
+components_a[0].add(components_a[3]);
+components_a[3].add(components_a[4]);
+components_a[0].add(components_a[5]);
+components_a[0].add(components_a[6]);
+components_a[0].add(components_a[7]);
+components_a[7].add(components_a[8]);
+components_a[4].add(components_a[9]);
+components_a[9].add(components_a[10]);
+components_a[10].add(components_a[11]);
+components_a[2].add(components_a[12]);
+
+scene.add(components[0]);
+for(i=1;i<6;i++){
+  components[0].add(components[i]);
+}
+
 // SETUP UPDATE CALL-BACK
 
 var clock = new THREE.Clock(true);
@@ -429,6 +458,13 @@ function updateBody() {
       p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
       rob1_attack(p);
       rob2_attack(p);
+
+
+
+
+
+      //*********************************************************************************
+      // collision part, need to change
       var head = components_a[11];
       //var blade = components_a[11];
       var originPoint = head.position.clone();
@@ -446,6 +482,8 @@ function updateBody() {
               break;
             }
       } 
+      //*******************************************************************************************
+
       
       break
 
@@ -526,14 +564,16 @@ function updateBody() {
 }
 //testMove();
 
-var hp1 = 100;
-var hp2 = 100;
+var hp1 = 10;
+var hp2 = 10;
 var mp1 = 0;
 var mp2 = 0;
 var act1 = 0;
 var act2 = 0;
 var turn = 0;
 var key = 0; // 1:11,2:12,3:21,4:22
+
+
 
 function removeText(){scene.remove(texts[key]);}
 function addText(){scene.add(texts[key]);}
@@ -545,9 +585,9 @@ function resetBody(){
   components_a[3].rotation.x=0;
   components_a[3].rotation.y=0;
   components_a[3].rotation.z=0;
-    components_a[10].rotation.x=0;
-    components_a[10].rotation.y=0;
-    components_a[10].rotation.z=0;
+  components_a[10].rotation.x=0;
+  components_a[10].rotation.y=0;
+  components_a[10].rotation.z=0;
 
   is_wall = 0;
   scene.remove(rob2_wall);
@@ -557,9 +597,24 @@ function resetBody(){
   components[0].position.set(10,4,0);
 }
 
+function updateHP(){
+  var string1 = "HHP: "+ hp1;
+  var string2 = "HHP: "+ hp2;
+  scene.remove(text_hp1);
+  scene.remove(text_hp2);
+  var new_hp1 = new THREE. TextGeometry(string1,{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+  var new_hp2 = new THREE. TextGeometry(string2,{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+  var new_text_hp1 = new THREE.Mesh(new_hp1,textmaterial);
+  var new_text_hp2 = new THREE.Mesh(new_hp2,textmaterial);
+  //scene.add(text_hp2);
+  //scene.add(text_hp1);
+}
+
 function takeAction(){
   switch (true){
      case(act1==1 && act2==1):
+       hp1--;hp2--;
+       //updateHP();
        resetBody();
        removeText();
        console.log("1: "+act1+" 2: "+act2);
@@ -672,8 +727,6 @@ var render = function() {
  requestAnimationFrame(render);
  renderer.render(scene, camera);
  texts[key].lookAt(camera.position);
- console.log(components_a[11].position.x);
- console.log(components_a[11].position.y);
 
 }
 
