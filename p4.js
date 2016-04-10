@@ -1143,13 +1143,33 @@ rayDirections.push(new THREE.Vector3(-1, -1, 1));
 rayDirections.push(new THREE.Vector3(1, -1, -1));
 rayDirections.push(new THREE.Vector3(-1, -1, -1));  
 
+
+var fps_text_geo = new THREE. TextGeometry("fps: 0",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+var fps_text = new THREE.Mesh(fps_text_geo,textmaterial);
+fps_text.position.set(20,0,0);
+
+scene.add(fps_text);
+function updateFPS(fps){
+
+  var string1 = "fps: "+fps;
+  var new_geo = new THREE. TextGeometry(string1,{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+  fps_text.geometry = new_geo;
+}
+
+
+
+var fps = 0;
+var stamp = clock.getElapsedTime();
 var render = function() {
+ if((clock.getElapsedTime()-stamp)<1){fps++;}
+ else{stamp=clock.getElapsedTime();updateFPS(fps);fps=0;}
  updateBody();
  requestAnimationFrame(render);
  renderer.render(scene, camera);
  texts[key].lookAt(camera.position);
  text_hp1.lookAt(camera.position);
  text_hp2.lookAt(camera.position);
+ fps_text.lookAt(camera.position);
 
 }
 
