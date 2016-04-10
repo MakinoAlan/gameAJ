@@ -45,26 +45,10 @@ window.addEventListener('resize', resize);
 resize();
 
 var defaultMaterial = new THREE.MeshLambertMaterial();
-// FLOOR WITH CHECKERBOARD 
-//var floorTexture = new THREE.ImageUtils.loadTexture('images/checkerboard.jpg');
-//floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
-//floorTexture.repeat.set(4, 4);
 
-//var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
-
-/*
-var floorGeometry = new THREE.PlaneBufferGeometry(30, 30);
-var floortexture = THREE.ImageUtils.loadTexture( 'texture/iron.jpg' );
-var floorMaterial = new THREE.MeshBasicMaterial( { map: floortexture } );
-var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-floor.position.y = -0.1;
-floor.rotation.x = Math.PI / 2;
-scene.add(floor);
-*/
 
 var floorTexture = new THREE.ImageUtils.loadTexture('texture/ground.jpg');
-//floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
-//floorTexture.repeat.set(4, 4);
+
 
 var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
 var floorGeometry = new THREE.PlaneBufferGeometry(100, 100);
@@ -385,32 +369,7 @@ new THREE.SourceLoader().load(shaderFiles, function(shaders) {
   conematerial.needsUpdate = true;
   })
 var keyboardtext = new THREEx.KeyboardState();
-function onKeyDown(event)
-{
- if(keyboardtext.eventMatches(event,"m"))
-  {
-    alert("Gouraud Shading");
-    textmaterial.vertexShader = gouraudMaterial.vertexShader;
-    textmaterial.fragmentShader = gouraudMaterial.fragmentShader;
-    textmaterial.needsUpdate = true;
-  }
-  else if(keyboardtext.eventMatches(event,"i"))
-  {
-    alert("Phong Shading");
-    textmaterial.vertexShader = phong_a_Material.vertexShader;
-    textmaterial.fragmentShader = phong_a_Material.fragmentShader;
-    textmaterial.needsUpdate = true;
-  }
-  else if(keyboardtext.eventMatches(event,"o"))
-  {
-    alert("Blinn Shading");
-    textmaterial.vertexShader = blinn_a_Material.vertexShader;
-    textmaterial.fragmentShader = blinn_a_Material.fragmentShader;
-    textmaterial.needsUpdate = true;
-  }
-  else{
-  }  
-};
+
 var text_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,22, 0,0,1,-5, 0,0,0,1);
 var text0_geo = new THREE. TextGeometry("START",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
 var text0 = new THREE.Mesh(text0_geo,textmaterial);
@@ -455,7 +414,7 @@ texts.push(text9);
 text9.position.set(0,22,-5);
 
 scene.add(texts[0]);
-keyboardtext.domElement.addEventListener('keydown', onKeyDown );
+
 
 // set barrel
 var cone_geo = new THREE.CylinderGeometry(0, 5, 15, 4, 1, true);
@@ -1092,11 +1051,12 @@ keyboard.domElement.addEventListener('keydown',function(event){
     else{act2 = 3; turn = 0; takeAction();}
   }
  
-
-
-  // TO-DO: BIND KEYS TO YOUR JUMP CUTS AND ANIMATIONS
-  // Note: Remember spacebar sets jumpcut/animate! 
-  // Hint: Look up "threex.keyboardstate by Jerome Tienne" for more info.
+  else if(keyboard.eventMatches(event,"p")){    
+    camera.lookAt(components[0].position);
+  }
+  else if(keyboard.eventMatches(event,"o")){    
+    camera.lookAt(components_a[0].position);
+  }
 
 
 
