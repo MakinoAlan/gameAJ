@@ -1,7 +1,3 @@
-/**
- * UBC CPSC 314, January 2016
- * Project 3 Template
- */
 $(document).ready(function(){
 
 
@@ -91,20 +87,6 @@ var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
 var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
 scene.add( skyBox );
 
-// set barrel
-var cone_geo = new THREE.CylinderGeometry(0, 5, 15, 4, 1, true);
-var cone1 = new THREE.Mesh(cone_geo,defaultMaterial);
-cone1.position.set(45,7.5,-45);
-scene.add(cone1);
-var cone2 = new THREE.Mesh(cone_geo,defaultMaterial);
-cone2.position.set(-45,7.5,-45);
-scene.add(cone2);
-var cone3 = new THREE.Mesh(cone_geo,defaultMaterial);
-cone3.position.set(-45,7.5,45);
-scene.add(cone3);
-var cone4 = new THREE.Mesh(cone_geo,defaultMaterial);
-cone4.position.set(45,7.5,45);
-scene.add(cone4);
 
 
 
@@ -335,6 +317,29 @@ var textmaterial = new THREE.ShaderMaterial({
      shininess: {type:'f', value: shininess}
    },
 });
+var ctwMaterial = new THREE.ShaderMaterial({
+   uniforms: {
+     lightColor : {type : 'c', value: lightColor},
+     ambientColor : {type : 'c', value: ambientColor},
+     lightPosition : {type: 'v3', value: lightPosition},
+     kAmbient : {type:'f', value: kAmbient},
+     kDiffuse: {type:'f', value: kDiffuse},
+     kSpecular: {type:'f', value: kSpecular},
+     shininess: {type:'f', value: shininess},
+     ctw_c: {type : 'c', value: ctw_c},
+     ctw_w: {type : 'c', value: ctw_w}
+   },
+});
+var conematerial = new THREE.ShaderMaterial({
+  uniforms: {
+
+          uDirLightPos: {type: 'v3', value: lightPosition},
+          uDirLightColor: {type : 'c', value: lightColor},
+          uMaterialColor:  { type: "c", value: new THREE.Color( 0xffe4c4 ) },
+          uKd: {type:'f', value: kDiffuse},
+          uBorder: {type : 'c', value: ambientColor}
+        },
+});
 var shaderFiles = [
   'glsl/example.vs.glsl',
   'glsl/example.fs.glsl',
@@ -354,6 +359,8 @@ var shaderFiles = [
   'glsl/blinn_a.fs.glsl',
   'glsl/ctw_a.vs.glsl',
   'glsl/ctw_a.fs.glsl',
+  'glsl/toon.vs.glsl',
+  'glsl/toon.fs.glsl',
 ];
 new THREE.SourceLoader().load(shaderFiles, function(shaders) {
   textmaterial.vertexShader = shaders['glsl/phong.vs.glsl'];
@@ -363,6 +370,14 @@ new THREE.SourceLoader().load(shaderFiles, function(shaders) {
   gouraudMaterial.vertexShader = shaders['glsl/gouraud.vs.glsl'];
   gouraudMaterial.fragmentShader = shaders['glsl/gouraud.fs.glsl'];
   gouraudMaterial.needsUpdate = true;
+
+  ctwMaterial.vertexShader = shaders['glsl/ctw_a.vs.glsl'];
+  ctwMaterial.fragmentShader = shaders['glsl/ctw_a.fs.glsl'];
+  ctwMaterial.needsUpdate = true;
+
+  conematerial.vertexShader = shaders['glsl/toon.vs.glsl'];
+  conematerial.fragmentShader = shaders['glsl/toon.fs.glsl'];
+  conematerial.needsUpdate = true;
   })
 var keyboardtext = new THREEx.KeyboardState();
 function onKeyDown(event)
@@ -414,6 +429,21 @@ texts.push(text4);
 text4.position.set(0,22,-5);
 scene.add(texts[0]);
 keyboardtext.domElement.addEventListener('keydown', onKeyDown );
+
+// set barrel
+var cone_geo = new THREE.CylinderGeometry(0, 5, 15, 4, 1, true);
+var cone1 = new THREE.Mesh(cone_geo,gouraudMaterial);
+cone1.position.set(45,7.5,-45);
+scene.add(cone1);
+var cone2 = new THREE.Mesh(cone_geo,textmaterial);
+cone2.position.set(-45,7.5,-45);
+scene.add(cone2);
+var cone3 = new THREE.Mesh(cone_geo,ctwMaterial);
+cone3.position.set(-45,7.5,45);
+scene.add(cone3);
+var cone4 = new THREE.Mesh(cone_geo,conematerial);
+cone4.position.set(45,7.5,45);
+scene.add(cone4);
 
 
 
@@ -834,8 +864,6 @@ rayDirections.push(new THREE.Vector3(1, -1, 1));
 rayDirections.push(new THREE.Vector3(-1, -1, 1));
 rayDirections.push(new THREE.Vector3(1, -1, -1));
 rayDirections.push(new THREE.Vector3(-1, -1, -1));  
-
-
 
 var render = function() {
  updateBody();
