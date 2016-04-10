@@ -73,6 +73,8 @@ floor.position.y = -0.1;
 floor.rotation.x = Math.PI / 2;
 scene.add(floor);
 
+var floor_array = [floor,floor];
+
 var imagePrefix = "texture/universe";
 var directions  = ["1", "2", "3", "4", "5", "6"];
 var imageSuffix = ".jpg";
@@ -107,6 +109,8 @@ var botMaterial = new THREE.MeshBasicMaterial(
   map: bottexture
 } );
 
+var swordMaterial = new THREE.MeshBasicMaterial();
+var shieldMaterial = new THREE.MeshBasicMaterial();
 
 // Alan
 function addRob1(){
@@ -118,7 +122,7 @@ function addRob1(){
   var torso_scale = new THREE.Matrix4().set(3,0,0,0, 0,7,0,0, 0,0,3,0, 0,0,0,1);
   torsoGeometry.applyMatrix(torso_scale);
   var torso = new THREE.Mesh(torsoGeometry,botMaterial);
-  torso.position.set(-10,7,0);
+  torso.position.set(-10,7.5,0);
   //scene.add(torso);
   components_a.push(torso);
  
@@ -214,16 +218,17 @@ function addRob1(){
   var blade_scale = new THREE.Matrix4().set(0.8,0,0,0, 0,1.5,0,0, 0,0,0.2,0, 0,0,0,1);
   var blade_Geometry = new THREE.CylinderGeometry(1,1,5,50);
   blade_Geometry.applyMatrix(blade_scale);
-  var blade = new THREE.Mesh(blade_Geometry,botMaterial);
+  var blade = new THREE.Mesh(blade_Geometry,swordMaterial);
   blade.position.set(0,4,0);
   //hilt1.add(blade);
   components_a.push(blade);
 
   //12
-  var sheild_scale = new THREE.Matrix4().set(5,0,0,0, 0,6,0,0, 0,0,0.3,0, 0,0,0,1);
+  var sheild_scale = new THREE.Matrix4().set(5,0,0,0, 0,10,0,0, 0,0,0.3,0, 0,0,0,1);
+  //var sheild_scale = new THREE.Matrix4().set(5,0,0,0, 0,6,0,0, 0,0,0.3,0, 0,0,0,1);
   var sheild_Geometry = makeCube();
   sheild_Geometry.applyMatrix(sheild_scale);
-  var sheild = new THREE.Mesh(sheild_Geometry,botMaterial);
+  var sheild = new THREE.Mesh(sheild_Geometry,shieldMaterial);
   sheild.position.set(0,0,-2.5);
   //arm_left.add(sheild);
   components_a.push(sheild)
@@ -427,6 +432,28 @@ var text4_geo = new THREE. TextGeometry("DEFEND - DEFEND",{size: 2, height: 1, c
 var text4 = new THREE.Mesh(text4_geo,textmaterial);
 texts.push(text4);
 text4.position.set(0,22,-5);
+
+var text5_geo = new THREE. TextGeometry("ATTACK - CHARGE",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+var text5 = new THREE.Mesh(text5_geo,textmaterial);
+texts.push(text5);
+text5.position.set(0,22,-5);
+var text6_geo = new THREE. TextGeometry("DEFEND - CHARGE",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+var text6 = new THREE.Mesh(text6_geo,textmaterial);
+texts.push(text6);
+text6.position.set(0,22,-5);
+var text7_geo = new THREE. TextGeometry("CHARGE - ATTACK",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+var text7 = new THREE.Mesh(text7_geo,textmaterial);
+texts.push(text7);
+text7.position.set(0,22,-5);
+var text8_geo = new THREE. TextGeometry("CHARGE - DEFEND",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+var text8 = new THREE.Mesh(text8_geo,textmaterial);
+texts.push(text8);
+text8.position.set(0,22,-5);
+var text9_geo = new THREE. TextGeometry("CHARGE - CHARGE",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+var text9 = new THREE.Mesh(text9_geo,textmaterial);
+texts.push(text9);
+text9.position.set(0,22,-5);
+
 scene.add(texts[0]);
 keyboardtext.domElement.addEventListener('keydown', onKeyDown );
 
@@ -493,12 +520,15 @@ function init_animation(p_start,p_end,t_length){
 
 
 function rob1_defend() {
-  var axis = new THREE.Vector3(0,1,0);
-  var rotateY = new THREE.Matrix4().set(Math.cos(p),0, Math.sin(p),  0, 
-                                            0, 1,0,   0, 
-                                            -Math.sin(p),0, Math.cos(p),   0,
-                                            0,        0,         0,        1);
-  components_a[1].rotateOnAxis(axis,-Math.PI/120);
+  //var axis = new THREE.Vector3(0,1,0);
+  //components_a[1].rotateOnAxis(axis,-Math.PI/120);
+  components_a[1].rotateY(-Math.PI/120);
+}
+
+function rob1_charge(){
+  components_a[1].rotateY(-Math.PI/120);
+  components_a[12].material.color.setRGB(Math.random(),Math.random(),Math.random());  
+
 }
 
 
@@ -513,8 +543,34 @@ function rob2_defend(){
   components[3].rotateZ(-Math.PI/120);
   rob2_wall.scale.y+=0.02;
 }
+
+function rob2_charge(){
+  if(is_wall == 0){scene.add(rob2_wall);is_wall=1;}
+  rob2_wall.material.color.setRGB(Math.random(),Math.random(),Math.random());  
+  components[2].rotateZ(-Math.PI/120);
+  components[3].rotateZ(-Math.PI/120);
+  rob2_wall.scale.y+=0.02;
+}
   var counter = 0;
-function rob1_attack(p) {
+function rob1_attack_charge(p) {
+  components_a[11].material.color.setRGB(Math.random(),Math.random(),Math.random());  
+  if(counter<30){
+    var axis = new THREE.Vector3(0,1,0);
+    components_a[3].rotateOnAxis(axis,Math.PI/60);
+    components_a[0].translateX(0.09);
+    counter++;
+  }
+  else if(30<=counter && counter<45){
+
+    components_a[10].rotateY(Math.PI/30);
+    counter++;
+  }
+  else if(45<=counter && counter<60){
+    components_a[3].rotateX(Math.PI/20);
+  } 
+}
+
+function rob1_attack() {
   if(counter<30){
     var axis = new THREE.Vector3(0,1,0);
     components_a[3].rotateOnAxis(axis,Math.PI/60);
@@ -539,6 +595,13 @@ function rob2_attack(){
     components[0].translateY(0.6);
   }
 
+}
+function rob2_attack_charge(){
+  components[0].material.color.setRGB(Math.random(),Math.random(),Math.random()); 
+  if(rob2_frame<=30){components[0].rotateZ(Math.PI/60); rob2_frame++;}
+  else{
+    components[0].translateY(0.6);
+  }
 }
 function updateBody() {
 
@@ -574,12 +637,11 @@ function updateBody() {
       }
 
       p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
-      rob1_attack(p);
-      rob2_attack(p);
-
-
-
-
+      if(p1_charge>0){rob1_attack_charge();}
+      else{rob1_attack();}
+      if(p2_charge>0){rob2_attack_charge();}
+      else{
+      rob2_attack();}
 
       //*********************************************************************************
       // collision part, need to change
@@ -627,14 +689,15 @@ function updateBody() {
               animate = false;  console.log("!!");        
             }
       } 
-      
-      rob1_attack();
+      if(p1_charge>0){rob1_attack_charge();}
+      else{rob1_attack();}
       rob2_defend();
 
       
       break
 
       case(key == 3 && animate):
+
       var time = clock.getElapsedTime(); // t seconds passed since the clock started.
 
       if (time > time_end){
@@ -644,8 +707,30 @@ function updateBody() {
       }
 
       p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
+
+      
+      if(p<0.1){}
+      else{
+      var head = components_a[12];
+      var originPoint = head.position.clone();
+      for (var vertexIndex = 0; vertexIndex < head.geometry.vertices.length; vertexIndex++)
+      {   
+        var localVertex = head.geometry.vertices[vertexIndex].clone();
+        var globalVertex = localVertex.applyMatrix4( head.matrixWorld);    
+        var directionVector = globalVertex.sub( head.position );
+    
+        var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
+        var collisionResults = ray.intersectObjects( components );
+          if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
+              animate = false;  console.log("!!");        
+            }
+      } 
+     }
+      
       rob1_defend();
-      rob2_attack();
+      if(p2_charge==0){
+      rob2_attack();}
+      else{rob2_attack_charge;}
 
       
       break
@@ -662,6 +747,99 @@ function updateBody() {
 
       rob1_defend();
       rob2_defend();
+      
+      break
+
+      case(key == 5 && animate):
+      var time = clock.getElapsedTime(); // t seconds passed since the clock started.
+      if (time > time_end){
+        p = p1;
+        animate = false;
+        break;
+      }
+
+      p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
+
+      if(p1_charge>0){rob1_attack_charge();}
+      else{rob1_attack();}
+      rob2_charge();
+
+      var head = rob2_wall;
+      var originPoint = head.position.clone();
+      for (var vertexIndex = 0; vertexIndex < head.geometry.vertices.length; vertexIndex++)
+      {   
+        var localVertex = head.geometry.vertices[vertexIndex].clone();
+        var globalVertex = localVertex.applyMatrix4( head.matrix);    
+        var directionVector = globalVertex.sub( head.position );
+    
+        var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
+        var collisionResults = ray.intersectObjects( components_a );
+          if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
+              animate = false;  console.log("!!");        
+            }
+      } 
+      
+      break
+
+      case(key == 6 && animate):
+      var time = clock.getElapsedTime(); // t seconds passed since the clock started.
+      if (time > time_end){
+        p = p1;
+        animate = false;
+        break;
+      }
+
+      p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
+
+      rob1_defend();
+      rob2_charge();
+      
+      break
+
+            case(key == 7 && animate):
+      var time = clock.getElapsedTime(); // t seconds passed since the clock started.
+      if (time > time_end){
+        p = p1;
+        animate = false;
+        break;
+      }
+
+      p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
+
+      rob1_charge();
+      if(p2_charge==0){
+      rob2_attack();}
+      else{rob2_attack_charge();}
+      
+      break
+
+      case(key == 8 && animate):
+      var time = clock.getElapsedTime(); // t seconds passed since the clock started.
+      if (time > time_end){
+        p = p1;
+        animate = false;
+        break;
+      }
+
+      p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
+
+      rob1_charge();
+      rob2_defend();
+      
+      break
+
+      case(key == 9 && animate):
+      var time = clock.getElapsedTime(); // t seconds passed since the clock started.
+      if (time > time_end){
+        p = p1;
+        animate = false;
+        break;
+      }
+
+      p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
+
+      rob1_charge();
+      rob2_charge();
       
       break
 
@@ -702,24 +880,35 @@ var act1 = 0;
 var act2 = 0;
 var turn = 0;
 var key = 0; // 1:11,2:12,3:21,4:22
+var p1_charge = 0;
+var p2_charge = 0;
 
 
-
-function removeText(){scene.remove(texts[key]);}
-function addText(){scene.add(texts[key]);}
+function removeText(){
+  scene.remove(texts[key]);
+}
+function addText(){
+  scene.add(texts[key]);
+  console.log("!!! "+ key);
+}
 
 function resetBody(){
 
   counter = 0;
   components_a[1].rotation.y=0;
+  components_a[1].rotation.x=0;
+  components_a[1].rotation.z=0;
   components_a[0].position.set(-10,7,0);
-
   components_a[3].rotation.x=0;
   components_a[3].rotation.y=0;
   components_a[3].rotation.z=0;
   components_a[10].rotation.x=0;
   components_a[10].rotation.y=0;
   components_a[10].rotation.z=0;
+
+  for(var i=0;i<=12;i++){
+    components_a[i].updateMatrix();
+  }
   
 
 
@@ -730,14 +919,15 @@ function resetBody(){
   components[0].rotation.z=0;components[2].rotation.z=0;components[3].rotation.z=0;
   components[0].position.set(10,4,0);
 
-  components[0].updateMatrix();  
+  components[0].updateMatrix(); 
+  components[1].updateMatrix(); 
   rob2_wall.updateMatrix();
 
 
 }
 
 var text_hp1,text_hp2;
-var hp1_ori= new THREE. TextGeometry("HP: 10",{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+var hp1_ori= new THREE. TextGeometry("HP/MP: 10/0",{size: 1.5, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
 text_hp1 = new THREE.Mesh(hp1_ori,textmaterial);
 text_hp1.position.set(10,18,-5);
 scene.add(text_hp1);
@@ -745,12 +935,17 @@ text_hp2 = new THREE.Mesh(hp1_ori,textmaterial);
 text_hp2.position.set(-10,18,-5);
 scene.add(text_hp2);
 function updateHP(){
-  var string1 = "HP1: "+ hp1;
-  var string2 = "HP2: "+ hp2;
-  var new_hp1 = new THREE. TextGeometry(string1,{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
-  var new_hp2 = new THREE. TextGeometry(string2,{size: 2, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
-  text_hp1.geometry = new_hp1;
-  text_hp2.geometry = new_hp2;
+  var string1 = "HP1/MP1: "+ hp1+"/"+mp1;
+  var string2 = "HP2/MP2: "+ hp2+"/"+mp2;
+  var new_hp1 = new THREE. TextGeometry(string1,{size: 1.5, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+  var new_hp2 = new THREE. TextGeometry(string2,{size: 1.5, height: 1, curveSegments: 2, font: "helvetiker", weight: "normal", style: "normal" });
+  text_hp1.geometry = new_hp2;
+  text_hp2.geometry = new_hp1;
+
+  if(hp1<=0 && hp2<=0){alert("DRAW");location.reload();}
+  else if(hp1<=0){alert("P2 Wins");location.reload();}
+  else if(hp2<=0){alert("p1 Wins");location.reload();}
+  else{}
 
 
 }
@@ -758,7 +953,12 @@ function updateHP(){
 function takeAction(){
   switch (true){
      case(act1==1 && act2==1):
-       hp1--;hp2--;
+       p1_charge = mp1;
+       p2_charge = mp2;
+       hp1 = hp1-(1+mp2);
+       hp2 = hp2-(1+mp1);
+       mp2=0;
+       mp1=0;
        updateHP();
        resetBody();
        removeText();
@@ -768,6 +968,10 @@ function takeAction(){
        init_animation(0,Math.PI/4,1);
      break;
      case(act1==1 && act2==2):
+       p1_charge = mp1;
+       p2_charge = mp2;
+       if(mp1>0){hp2--;mp1=0;}
+       updateHP();
        resetBody();
        removeText();
        console.log("1: "+act1+" 2: "+act2);
@@ -776,6 +980,10 @@ function takeAction(){
        init_animation(0,Math.PI/4,1);
      break;
      case(act1==2 && act2==1):
+       p1_charge = mp1;
+       p2_charge = mp2;
+       if(mp2>0){hp1--;mp2=0;}
+       updateHP();
        resetBody();
        removeText();
        console.log("1: "+act1+" 2: "+act2);
@@ -784,10 +992,76 @@ function takeAction(){
        init_animation(0,Math.PI/4,1);
      break;
      case(act1==2 && act2==2):
+       p1_charge = mp1;
+       p2_charge = mp2;
        resetBody();
        removeText();
        console.log("1: "+act1+" 2: "+act2);
        key=4;
+       addText();
+       init_animation(0,Math.PI/4,1);
+     break;
+     
+     case(act1==1 && act2==3):       
+       p1_charge = mp1;
+       p2_charge = mp2;
+       hp2 = hp2-(1+mp1);
+       mp1=0;
+       updateHP();
+       resetBody();
+       removeText();
+       console.log("1: "+act1+" 2: "+act2);
+       key=5;
+       addText();
+       init_animation(0,Math.PI/4,1);
+     break;
+    case(act1==2 && act2==3):
+       p1_charge = mp1;
+       p2_charge = mp2;
+       mp2++;
+       updateHP();
+       resetBody();
+       removeText();
+       console.log("1: "+act1+" 2: "+act2);
+       key=6;
+       addText();
+       init_animation(0,Math.PI/4,1);
+     break;
+    case(act1==3 && act2==1):
+       p1_charge = mp1;
+       p2_charge = mp2;
+       hp1 = hp1-(1+mp2);
+       mp2 = 0;
+       updateHP();
+       resetBody();
+       removeText();
+       console.log("1: "+act1+" 2: "+act2);
+       key=7;
+       addText();
+       init_animation(0,Math.PI/4,1);
+     break;
+    case(act1==3 && act2==2):
+       p1_charge = mp1;
+       p2_charge = mp2;
+       mp1++;
+       updateHP();
+       resetBody();
+       removeText();
+       console.log("1: "+act1+" 2: "+act2);
+       key=8;
+       addText();
+       init_animation(0,Math.PI/4,1);
+     break;
+    case(act1==3 && act2==3):
+       p1_charge = mp1;
+       p2_charge = mp2;
+       mp1++;
+       mp2++;
+       updateHP();
+       resetBody();
+       removeText();
+       console.log("1: "+act1+" 2: "+act2);
+       key=9;
        addText();
        init_animation(0,Math.PI/4,1);
      break;
@@ -802,16 +1076,20 @@ var keyboard = new THREEx.KeyboardState();
 keyboard.domElement.addEventListener('keydown',function(event){
   if (event.repeat)
     return;  
-  else if(keyboard.eventMatches(event,"1")){    // 0: Set camera to neutral position, view reset
+  else if(keyboard.eventMatches(event,"1")){   
     if (turn == 0){act1=1;turn++;}
     else{act2 = 1; turn = 0; takeAction();}
   }
   else if(keyboard.eventMatches(event,"U")){ 
     console.log("11");key = 99; init_animation(0,Math.PI/4,1);
   }  
-  else if(keyboard.eventMatches(event,"2")){    // 0: Set camera to neutral position, view reset
+  else if(keyboard.eventMatches(event,"2")){    
     if (turn == 0){act1=2;turn++;}
     else{act2 = 2; turn = 0; takeAction();}
+  }
+  else if(keyboard.eventMatches(event,"3")){    
+    if (turn == 0){act1=3;turn++;}
+    else{act2 = 3; turn = 0; takeAction();}
   }
  
 
